@@ -14,7 +14,7 @@ const ParseResumeDataInputSchema = z.object({
   resumeDataUri: z
     .string()
     .describe(
-      'The resume file (PDF or DOCX) content as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.'
+      "The resume file (PDF or DOCX) content as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 export type ParseResumeDataInput = z.infer<typeof ParseResumeDataInputSchema>;
@@ -27,7 +27,6 @@ const ParseResumeDataOutputSchema = z.object({
       email: z.string().describe('The email address of the candidate.'),
     }).describe('The contact details of the candidate.'),
   }).describe('The personal details of the candidate.'),
-  overview: z.string().describe('A professional summary of the candidate.'),
   experience: z.object({
     totalExperience: z.string().describe('The total years of experience of the candidate.'),
     relevantExperience: z.string().describe('The relevant years of experience of the candidate.'),
@@ -40,7 +39,7 @@ const ParseResumeDataOutputSchema = z.object({
   })).describe('The education history of the candidate.'),
   skills: z.array(z.object({
     skillName: z.string().describe('The name of the skill.'),
-    rating: z.number().min(1).max(5).describe('The rating of the skill (out of 5). A value of 0 is not allowed.'),
+    rating: z.number().min(1).max(5).describe('The rating of the skill (out of 5). A value of 0 is not allowed and will be rounded up to 1.'),
   })).describe('The skills of the candidate.'),
   location: z.object({
     currentLocation: z.string().describe('The current location of the candidate.'),
@@ -73,7 +72,6 @@ const resumeParserPrompt = ai.definePrompt({
 You will be given a resume as a data URI. Extract the following information from the resume and respond in JSON format:
 
 - Personal Details (full name, contact details (phone, email))
-- Overview (A professional summary of the candidate)
 - Experience (total experience, relevant experience)
 - Education (degree, major, university, graduation date)
 - Skills (skill name, rating (out of 5, where 1 is the minimum))
@@ -92,6 +90,12 @@ const parseResumeDataFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await resumeParserPrompt(input);
+    if (output) {
+      output.skills = output.skills.map(skill => ({
+        ...skill,
+        rating: Math.max(1, skill.rating),
+      }));
+    }
     return output!;
   }
 );

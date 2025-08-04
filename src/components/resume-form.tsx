@@ -56,20 +56,21 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
       form.reset(initialData);
     }
     form.reset(initialData);
-  }, []);
+  }, [form, initialData, onLoadFromStorage]);
 
   useEffect(() => {
     const subscription = form.watch((value) => {
       localStorage.setItem('resumeFormData', JSON.stringify(value));
     });
     return () => subscription.unsubscribe();
-  }, [form.watch]);
+  }, [form]);
 
   const handlePrint = () => {
     window.print();
   }
 
   const onSubmit = (data: ResumeData) => {
+    console.log('Form submitted for printing:', data);
     handlePrint();
   }
 
@@ -78,17 +79,17 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-2 no-print">
             <Button type="submit">
-              <Download className="mr-2" /> Download as PDF
+              <Download className="mr-2 h-4 w-4" /> Download as PDF
             </Button>
             <Button type="button" variant="outline" onClick={onReset}>
-              <RotateCcw className="mr-2" /> Start Over
+              <RotateCcw className="mr-2 h-4 w-4" /> Start Over
             </Button>
         </div>
         
-        <Accordion type="multiple" defaultValue={['item-1', 'item-overview', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6', 'item-7']} className="w-full">
+        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6', 'item-7']} className="w-full">
             
             <AccordionItem value="item-1">
-              <AccordionTrigger><User className="mr-2" /> Basic Information</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><User className="mr-2" /> Basic Information</div></AccordionTrigger>
               <AccordionContent>
                 <Card className="printable-card">
                   <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -99,20 +100,9 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
                 </Card>
               </AccordionContent>
             </AccordionItem>
-
-            <AccordionItem value="item-overview">
-              <AccordionTrigger><ScrollText className="mr-2" /> Overview</AccordionTrigger>
-              <AccordionContent>
-                <Card className="printable-card">
-                  <CardContent className="pt-6">
-                    <FormField control={form.control} name="overview" render={({ field }) => ( <FormItem><FormLabel>Professional Summary</FormLabel><FormControl><Textarea placeholder="A brief summary of the candidate's professional background..." {...field} rows={5} /></FormControl><FormMessage /></FormItem> )} />
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
             
             <AccordionItem value="item-2">
-              <AccordionTrigger><Star className="mr-2" /> Skills</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><Star className="mr-2" /> Skills</div></AccordionTrigger>
               <AccordionContent>
                 <Card className="printable-card">
                   <CardContent className="pt-6 space-y-4">
@@ -130,7 +120,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             </AccordionItem>
             
             <AccordionItem value="item-3">
-              <AccordionTrigger><GraduationCap className="mr-2" /> Education</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><GraduationCap className="mr-2" /> Education</div></AccordionTrigger>
               <AccordionContent>
                 <Card className="printable-card">
                   <CardContent className="pt-6 space-y-4">
@@ -155,7 +145,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             </AccordionItem>
 
             <AccordionItem value="item-4">
-              <AccordionTrigger><Briefcase className="mr-2" /> Work History</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><Briefcase className="mr-2" /> Work History</div></AccordionTrigger>
               <AccordionContent>
                 <Card className="printable-card">
                    <CardContent className="pt-6 space-y-4">
@@ -180,7 +170,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             </AccordionItem>
             
             <AccordionItem value="item-5">
-              <AccordionTrigger><FileQuestion className="mr-2" /> Additional Details</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><FileQuestion className="mr-2" /> Additional Details</div></AccordionTrigger>
               <AccordionContent>
                 <Card className="printable-card">
                   <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -197,7 +187,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             </AccordionItem>
             
             <AccordionItem value="item-6">
-              <AccordionTrigger><FileQuestion className="mr-2" /> Company Specific Questions</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><FileQuestion className="mr-2" /> Company Specific Questions</div></AccordionTrigger>
               <AccordionContent>
                  <Card className="printable-card">
                   <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-1 gap-4">
@@ -210,7 +200,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             </AccordionItem>
             
             <AccordionItem value="item-7">
-              <AccordionTrigger><UserCheck className="mr-2" /> Recruiter Details</AccordionTrigger>
+              <AccordionTrigger><div className="flex items-center"><UserCheck className="mr-2" /> Recruiter Details</div></AccordionTrigger>
               <AccordionContent>
                  <Card className="printable-card">
                   <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
