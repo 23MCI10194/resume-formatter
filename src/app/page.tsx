@@ -56,10 +56,9 @@ export default function Home() {
             ...currentData.employmentDetails,
             ...result.employmentDetails
           },
-          skillsRating: currentData.skillsRating.map((skill, index) => ({
+          skillsRating: (result.skillsRating.length > 0 ? result.skillsRating : currentData.skillsRating).map((skill, index) => ({
+            ...currentData.skillsRating[index],
             ...skill,
-            skill: result.skillsRating[index]?.skill || '',
-            candidateRating: result.skillsRating[index]?.candidateRating || 1,
           })),
           otherInfo: {
             ...currentData.otherInfo,
@@ -71,8 +70,10 @@ export default function Home() {
           }
         };
 
-        setResumeData(fullData);
-        localStorage.setItem('resumeFormData', JSON.stringify(fullData));
+        const validatedData = ResumeDataSchema.parse(fullData);
+        setResumeData(validatedData);
+        localStorage.setItem('resumeFormData', JSON.stringify(validatedData));
+
         toast({
           title: "Success!",
           description: "Your resume has been parsed successfully.",
@@ -133,3 +134,5 @@ export default function Home() {
     </main>
   );
 }
+
+    

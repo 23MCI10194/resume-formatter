@@ -2,13 +2,12 @@
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormMessage } from '@/components/ui/form';
 import { Download, RotateCcw } from 'lucide-react';
 
 interface ResumeFormProps {
@@ -113,7 +112,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 </Button>
             </div>
 
-            <div className="border border-black">
+            <div className="border border-black printable-card">
                 {/* Basic Information */}
                 <h2 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Basic Information</h2>
                 <div className="grid grid-cols-2 gap-px bg-black">
@@ -290,3 +289,5 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     </Form>
   );
 }
+
+    
