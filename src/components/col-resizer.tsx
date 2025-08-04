@@ -80,7 +80,7 @@ export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled
     window.addEventListener('mouseup', onMouseUp);
   }, [onMouseMove, onMouseUp, tableRef]);
   
-  if (!enabled || colIndex > 4) return null;
+  if (!enabled) return null;
 
   return (
     <div
@@ -94,3 +94,5 @@ export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled
     />
   );
 }
+
+    
