@@ -104,7 +104,7 @@ body {
   }
   .printable-input {
     border: none !important;
-    background-color: white !important;
+    background-color: transparent !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     border-radius: 0 !important;
@@ -117,32 +117,33 @@ body {
     border-collapse: collapse;
     width: 100%;
   }
-
+  
   .printable-table td, .printable-table th {
     border: 1px solid black;
-    padding: 4px;
+    padding: 2px 4px;
     vertical-align: middle;
   }
 
   .printable-section-header {
-    background-color: #F8C471 !important; /* Light Orange */
+    background-color: #f8c471 !important; /* Light Orange */
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color: black !important;
     text-align: center !important;
     font-weight: bold !important;
     padding: 4px !important;
+    font-size: 11px !important;
   }
   
-  .printable-label {
-    font-weight: bold;
-    padding-right: 8px;
-  }
-
   .bg-header-peach {
-     background-color: #F5CBA7 !important;
+     background-color: #f5cba7 !important; /* Lighter Orange */
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+      font-weight: bold;
+  }
+
+  .font-bold {
+    font-weight: bold;
   }
   
   @page {

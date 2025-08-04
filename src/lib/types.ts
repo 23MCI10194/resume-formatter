@@ -51,13 +51,11 @@ export const ResumeDataSchema = z.object({
     projectsHandled: z.string().default("").describe("Number of Projects Handled"),
     relevantExperience: z.string().default("").describe("Relevant Experience in Skill"),
     candidateRating: z.number().min(1).max(5).default(1).describe("Candidate's self-rating"),
-    recruiterRating: z.number().min(1).max(5).default(1).describe("Recruiter's rating"),
   })).default(Array(3).fill(undefined).map(() => ({
       skill: "",
       projectsHandled: "",
       relevantExperience: "",
       candidateRating: 1,
-      recruiterRating: 1,
   }))).describe('Skills Rating'),
   
   otherInfo: z.object({
@@ -67,8 +65,8 @@ export const ResumeDataSchema = z.object({
     communicationSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
     listeningSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
     earlierWorkedWithDeloitte: YesNoSchema,
-    deloitteFteContract: z.string().default("No"),
-    deloitteEntity: z.string().default("No"),
+    deloitteFteContract: z.string().default("").describe("If yes, was it FTE or contract?"),
+    deloitteEntity: z.string().default("").describe("If yes, which Deloitte entity?"),
     tenure: z.string().default("").describe("If yes, tenure (From/To)"),
     reasonToLeaveDeloitte: z.string().default("").describe("If yes, reason to leave Deloitte"),
     longLeavePlan: YesNoSchema.describe("Any plan for a long leave for next 6 months"),
@@ -80,6 +78,7 @@ export const ResumeDataSchema = z.object({
     vendorRecruiterName: z.string().default(""),
     deloitteCrm: z.string().default(""),
     vendorCoordinator: z.string().default(""),
+    recruiterRating: z.string().default("").describe("Recruiter's rating of the candidate"),
   }).default({}).describe('Recruiter Details'),
 });
 

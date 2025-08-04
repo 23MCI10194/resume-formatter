@@ -56,7 +56,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
 
   useEffect(() => {
     form.reset(initialData);
-  }, [initialData, form.reset]);
+  }, [initialData, form]);
 
   const watchedValues = watch();
   useEffect(() => {
@@ -84,77 +84,77 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 <tbody>
                   {/* Basic Information Header */}
                   <tr>
-                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Basic Information</td>
+                    <td colSpan={4} className="printable-section-header">Basic Information</td>
                   </tr>
 
                   {/* Row 1 */}
                   <tr>
-                    <td className="font-bold w-1/5">Job Posting ID</td>
+                    <td className="font-bold bg-header-peach w-1/5">Job Posting ID</td>
                     <td className="w-2/5"><FormInput name="basicInfo.jobPostingId" control={control} /></td>
-                    <td className="font-bold w-1/5">Job Seeker ID</td>
+                    <td className="font-bold bg-header-peach w-1/5">Job Seeker ID</td>
                     <td className="w-2/5"><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
                   </tr>
 
                    {/* Row 2 */}
                   <tr>
-                    <td className="font-bold">Vendor Name</td>
+                    <td className="font-bold bg-header-peach">Vendor Name</td>
                     <td><FormInput name="basicInfo.vendorName" control={control} /></td>
-                    <td className="font-bold">Position Applied</td>
+                    <td className="font-bold bg-header-peach">Position Applied</td>
                     <td><FormInput name="basicInfo.positionApplied" control={control} /></td>
                   </tr>
 
                   {/* Row 3 */}
                    <tr>
-                    <td className="font-bold">Requisition Received Date</td>
+                    <td className="font-bold bg-header-peach">Requisition Received Date</td>
                     <td><FormInput name="basicInfo.requisitionReceivedDate" control={control} /></td>
-                    <td className="font-bold">Contact No</td>
+                    <td className="font-bold bg-header-peach">Contact No</td>
                     <td><FormInput name="basicInfo.contactNo" control={control} /></td>
                   </tr>
                   
                    {/* Row 4 */}
                    <tr>
-                    <td className="font-bold">Candidate NameasPer PAN</td>
+                    <td className="font-bold bg-header-peach">Candidate Name as per PAN</td>
                     <td><FormInput name="basicInfo.candidateName" control={control} /></td>
-                    <td className="font-bold">Total Experience</td>
+                    <td className="font-bold bg-header-peach">Total Experience</td>
                     <td><FormInput name="basicInfo.totalExperience" control={control} /></td>
                   </tr>
 
                    {/* Row 5 */}
                    <tr>
-                    <td className="font-bold">Email</td>
+                    <td className="font-bold bg-header-peach">Email</td>
                     <td><FormInput name="basicInfo.email" control={control} /></td>
-                    <td className="font-bold">Relevant Experience</td>
+                    <td className="font-bold bg-header-peach">Relevant Experience</td>
                     <td><FormInput name="basicInfo.relevantExperience" control={control} /></td>
                   </tr>
 
                   {/* Row 6 */}
                   <tr>
-                    <td className="font-bold">Current Location</td>
+                    <td className="font-bold bg-header-peach">Current Location</td>
                     <td><FormInput name="basicInfo.currentLocation" control={control} /></td>
-                    <td className="font-bold">Relocation (Yes/No)</td>
+                    <td className="font-bold bg-header-peach">Relocation (Yes/No)</td>
                     <td><FormSelect name="basicInfo.relocation" control={control} options={['Yes', 'No', 'N/A']} /></td>
                   </tr>
                   
                   {/* Row 7 */}
                   <tr>
-                    <td className="font-bold">Preferred Location</td>
+                    <td className="font-bold bg-header-peach">Preferred Location</td>
                     <td><FormInput name="basicInfo.preferredLocation" control={control} /></td>
-                    <td className="font-bold">Work from office/ Work from Home/Both</td>
+                    <td className="font-bold bg-header-peach">Work from office/ Work from Home/Both</td>
                     <td><FormSelect name="basicInfo.workPreference" control={control} options={['Office', 'Home', 'Both', 'N/A']} /></td>
                   </tr>
                   
                   {/* Education / Employment Header */}
                   <tr>
-                    <td colSpan={3} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Education Details</td>
-                    <td colSpan={1} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Employment Details</td>
+                    <td colSpan={3} className="printable-section-header">Education Details</td>
+                    <td className="printable-section-header">Employment Details</td>
                   </tr>
 
                   {/* Education / Employment Content */}
                   <tr>
-                    <td colSpan={3}>
-                      <table className="w-full border-collapse">
+                    <td colSpan={3} style={{ padding: 0 }}>
+                      <table className="w-full h-full border-collapse">
                         <tbody>
-                          <tr>
+                          <tr className='bg-header-peach'>
                             <td className="font-bold border-r border-black w-1/3">Degree</td>
                             <td className="font-bold border-r border-black w-1/3">From</td>
                             <td className="font-bold w-1/3">To</td>
@@ -172,10 +172,10 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         </tbody>
                       </table>
                     </td>
-                    <td colSpan={1}>
-                       <table className="w-full border-collapse">
+                    <td style={{ padding: 0 }}>
+                       <table className="w-full h-full border-collapse">
                         <tbody>
-                          <tr>
+                          <tr className='bg-header-peach'>
                             <td className="font-bold border-r border-black w-1/2">From</td>
                             <td className="font-bold w-1/2">To</td>
                           </tr>
@@ -183,44 +183,66 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                             <td className="border-r border-black"><FormInput name="employmentDetails.from" control={control}/></td>
                             <td><FormInput name="employmentDetails.to" control={control}/></td>
                           </tr>
+                          <tr>
+                            <td className="border-r border-black" style={{ height: '100%' }}>&nbsp;</td>
+                            <td style={{ height: '100%' }}>&nbsp;</td>
+                          </tr>
                         </tbody>
                       </table>
                     </td>
                   </tr>
                   <tr>
-                    <td className="font-bold">Others (Any Certifications):</td>
+                    <td className="font-bold bg-header-peach">Others (Any Certifications):</td>
                     <td colSpan={2}><FormInput name="educationDetails.certifications" control={control}/></td>
-                    <td className="font-bold">Current / Last Employer: <FormInput name="employmentDetails.currentEmployer" control={control}/></td>
+                    <td className="bg-header-peach">
+                        <span className="font-bold">Current / Last Employer:</span>
+                        <FormInput name="employmentDetails.currentEmployer" control={control}/>
+                    </td>
                   </tr>
                    <tr>
-                    <td className="font-bold">Awareness about Contract Role (Yes/No)</td>
+                    <td className="font-bold bg-header-peach">Awareness about Contract Role (Yes/No)</td>
                     <td colSpan={2}><FormSelect name="otherInfo.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                    <td className="font-bold">Role FTE/ Contract with Current or Last Employer: <FormInput name="employmentDetails.employmentType" control={control}/></td>
+                    <td className="bg-header-peach">
+                        <span className="font-bold">Role FTE/ Contract with Current or Last Employer:</span>
+                        <FormInput name="employmentDetails.employmentType" control={control}/>
+                    </td>
                   </tr>
                    <tr>
-                    <td className="font-bold">Holding any other offers (Yes/No)</td>
+                    <td className="font-bold bg-header-peach">Holding any other offers (Yes/No)</td>
                     <td colSpan={2}><FormSelect name="otherInfo.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                    <td className="font-bold">Overseas Experience If Any (Yes/No): <FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td className="bg-header-peach">
+                        <span className="font-bold">Overseas Experience If Any (Yes/No):</span>
+                        <FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} />
+                    </td>
                   </tr>
                    <tr>
-                    <td className="font-bold">Reason for Change</td>
+                    <td className="font-bold bg-header-peach">Reason for Change</td>
                     <td colSpan={2}><FormInput name="otherInfo.reasonForChange" control={control}/></td>
-                    <td className="font-bold">Notice period as per company policy / Serving notice period: <FormInput name="employmentDetails.noticePeriod" control={control}/></td>
+                    <td className="bg-header-peach">
+                        <span className="font-bold">Notice period as per company policy / Serving notice period:</span>
+                        <FormInput name="employmentDetails.noticePeriod" control={control}/>
+                    </td>
                   </tr>
                    <tr>
                     <td colSpan={3}></td>
-                    <td className="font-bold">Bench/ Market Profile: <FormInput name="employmentDetails.benchMarketProfile" control={control}/></td>
+                    <td className="bg-header-peach">
+                        <span className="font-bold">Bench/ Market Profile:</span>
+                        <FormInput name="employmentDetails.benchMarketProfile" control={control}/>
+                    </td>
                   </tr>
                   <tr>
                     <td colSpan={3}></td>
-                    <td className="font-bold">Shifts (Yes/No): <FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td className="bg-header-peach">
+                        <span className="font-bold">Shifts (Yes/No):</span>
+                        <FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} />
+                    </td>
                   </tr>
 
                    {/* Skills Header */}
                   <tr>
-                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Skills Rating (1-Poor & 5-Excellent)</td>
+                    <td colSpan={4} className="printable-section-header">Skills Rating (1-Poor & 5-Excellent)</td>
                   </tr>
-                  <tr>
+                  <tr className="bg-header-peach">
                     <td className="font-bold text-center">Top 3 Skills (Relevant/ Others)</td>
                     <td className="font-bold text-center">No of Projects Handled</td>
                     <td className="font-bold text-center">Relevant Experience in Skills</td>
@@ -235,61 +257,65 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     </tr>
                   ))}
                   <tr>
-                    <td colSpan={4}><FormInput name={`skillsRating.3.recruiterRating`} control={control} /></td>
+                    <td colSpan={4}>
+                      <span className='font-bold bg-header-peach'>Recruiter Rating:</span>
+                      <FormInput name={`recruiterDetails.recruiterRating`} control={control} />
+                    </td>
                   </tr>
+                  
 
                   {/* Other Info */}
                   <tr>
-                      <td className="font-bold">Communication (Poor / Average / Excellent)</td>
+                      <td className="font-bold bg-header-peach">Communication (Poor / Average / Excellent)</td>
                       <td><FormSelect name="otherInfo.communicationSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
-                      <td className="font-bold">Listening Skills (Poor / Average / Excellent)-</td>
+                      <td className="font-bold bg-header-peach">Listening Skills (Poor / Average / Excellent)</td>
                       <td><FormSelect name="otherInfo.listeningSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
                   </tr>
                   <tr>
-                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Other Information</td>
+                    <td colSpan={4} className="printable-section-header">Other Information</td>
                   </tr>
                   <tr>
-                    <td className="font-bold">Earlier worked with Deloitte (Yes/No)</td>
+                    <td className="font-bold bg-header-peach">Earlier worked with Deloitte (Yes/No)</td>
                     <td><FormSelect name="otherInfo.earlierWorkedWithDeloitte" control={control} options={['Yes', 'No', 'N/A']} /></td>
                     <td colSpan={2}><FormInput name="otherInfo.deloitteFteContract" control={control}/></td>
                   </tr>
                   <tr>
                     <td colSpan={2}></td>
-                    <td className="font-bold">If Yes, Tenure (From/To)</td>
+                    <td className="font-bold bg-header-peach">If Yes, Tenure (From/To)</td>
                     <td><FormInput name="otherInfo.tenure" control={control}/></td>
                   </tr>
                    <tr>
                     <td colSpan={2}></td>
-                    <td className="font-bold">If Yes, Reason to Leave Deloitte</td>
+                    <td className="font-bold bg-header-peach">If Yes, Reason to Leave Deloitte</td>
                     <td><FormInput name="otherInfo.reasonToLeaveDeloitte" control={control}/></td>
                   </tr>
                   <tr>
-                    <td className="font-bold">If Yes, Deloitte Entity</td>
+                    <td className="font-bold bg-header-peach">If Yes, Deloitte Entity</td>
                     <td><FormInput name="otherInfo.deloitteEntity" control={control}/></td>
-                    <td className="font-bold">Relevant documents for further process</td>
+                    <td className="font-bold bg-header-peach">Relevant documents for further process</td>
                     <td></td>
                   </tr>
                   <tr>
-                    <td className="font-bold">Any plan for a long leave for next 6 months</td>
+                    <td className="font-bold bg-header-peach">Any plan for a long leave for next 6 months</td>
                     <td><FormSelect name="otherInfo.longLeavePlan" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                    <td className="font-bold">Any other Input / Comments / Concerns:</td>
+                    <td className="font-bold bg-header-peach">Any other Input / Comments / Concerns:</td>
                     <td><FormInput name="otherInfo.otherInput" control={control}/></td>
                   </tr>
 
                    {/* Recruiter Details */}
                   <tr>
-                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Recruiter Details</td>
+                    <td colSpan={4} className="printable-section-header">Recruiter Details</td>
                   </tr>
                   <tr>
-                    <td className="font-bold">Deloitte Recruiter</td>
+                    <td className="font-bold bg-header-peach">Deloitte Recruiter</td>
                     <td><FormInput name="recruiterDetails.deloitteRecruiter" control={control}/></td>
-                    <td className="font-bold">Vendor Recruiter Name</td>
+                    <td className="font-bold bg-header-peach">Vendor Recruiter Name</td>
                     <td><FormInput name="recruiterDetails.vendorRecruiterName" control={control}/></td>
                   </tr>
                   <tr>
-                    <td className="font-bold">Deloitte CRM</td>
+                    <td className="font-bold bg-header-peach">Deloitte CRM</td>
                     <td><FormInput name="recruiterDetails.deloitteCrm" control={control}/></td>
-                    <td className="font-bold">Vendor Coordinator</td>
+                    <td className="font-bold bg-header-peach">Vendor Coordinator</td>
                     <td><FormInput name="recruiterDetails.vendorCoordinator" control={control}/></td>
                   </tr>
                 </tbody>
