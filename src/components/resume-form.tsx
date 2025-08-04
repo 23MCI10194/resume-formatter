@@ -84,7 +84,8 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 <tbody>
                   {/* Basic Information Header */}
                   <tr>
-                    <td colSpan={6} className="printable-section-header">Basic Information</td>
+                    <td colSpan={4} className="printable-section-header">Basic Information</td>
+                    <td colSpan={2} className="bg-header-peach"></td>
                   </tr>
 
                   {/* Row 1 */}
@@ -100,7 +101,9 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     <td className="font-bold bg-header-peach">Vendor Name</td>
                     <td><FormInput name="basicInfo.vendorName" control={control} /></td>
                     <td className="font-bold bg-header-peach">Position Applied</td>
-                    <td colSpan={3}><FormInput name="basicInfo.positionApplied" control={control} /></td>
+                    <td><FormInput name="basicInfo.positionApplied" control={control} /></td>
+                    <td className="font-bold bg-header-peach">Skill Name</td>
+                    <td><FormInput name="basicInfo.skillName" control={control} /></td>
                   </tr>
 
                   {/* Row 3 */}

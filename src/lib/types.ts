@@ -8,6 +8,7 @@ export const ResumeDataSchema = z.object({
     jobSeekerId: z.string().default("").describe("Job Seeker ID"),
     vendorName: z.string().default("").describe("Vendor Name"),
     positionApplied: z.string().default("").describe("Position Applied"),
+    skillName: z.string().default("").describe("Skill Name"),
     requisitionReceivedDate: z.string().default("").describe("Requisition Received Date"),
     contactNo: z.string().default("").describe("Contact Number"),
     candidateName: z.string().default("").describe("Candidate Name as per PAN"),
