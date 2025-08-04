@@ -8,9 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
-import { Download, RotateCcw } from 'lucide-react';
-import { saveAs } from 'file-saver';
-import htmlToDocx from 'html-to-docx';
+import { Download, RotateCcw, Printer } from 'lucide-react';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -65,63 +63,23 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     localStorage.setItem('resumeFormData', JSON.stringify(watchedValues));
   }, [watchedValues]);
   
-  const handleDownload = async () => {
-    const input = printRef.current;
-    if (input) {
-      document.body.classList.add('print-preview');
-      const htmlString = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <style>
-              ${Array.from(document.styleSheets)
-                .map(sheet => {
-                  try {
-                    return Array.from(sheet.cssRules)
-                      .map(rule => rule.cssText)
-                      .join('');
-                  } catch (e) {
-                    console.warn('Could not read stylesheet rules', e);
-                    return '';
-                  }
-                })
-                .join('\n')}
-            </style>
-          </head>
-          <body>
-            ${input.innerHTML}
-          </body>
-        </html>
-      `;
-      document.body.classList.remove('print-preview');
-      
-      try {
-        const fileBuffer = await htmlToDocx(htmlString, undefined, {
-          table: { row: { cantSplit: true } },
-          footer: false,
-          header: false,
-        });
-  
-        saveAs(fileBuffer, 'resume-details.docx');
-      } catch (error) {
-        console.error("Error generating DOCX:", error);
-      }
-    }
+  const handlePrint = () => {
+    window.print();
   }
 
   return (
     <Form {...form}>
         <div className="space-y-4 bg-white p-4 sm:p-6 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row gap-2 no-print">
-                <Button type="button" onClick={handleDownload}>
-                  <Download className="mr-2 h-4 w-4" /> Download as Word
+                <Button type="button" onClick={handlePrint}>
+                  <Printer className="mr-2 h-4 w-4" /> Print / Download
                 </Button>
                 <Button type="button" variant="outline" onClick={onReset}>
                   <RotateCcw className="mr-2 h-4 w-4" /> Start Over
                 </Button>
             </div>
 
-            <div ref={printRef} className="printable-card bg-white p-2">
+            <div ref={printRef} className="printable-area printable-card bg-white p-2">
               <table className="w-full border-collapse border-2 border-black printable-table">
                 <tbody>
                   {/* Basic Information Header */}
