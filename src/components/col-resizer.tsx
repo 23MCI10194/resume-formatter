@@ -11,10 +11,13 @@ interface ColResizerProps {
 
 export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled }: ColResizerProps) {
   const resizerRef = useRef<HTMLDivElement>(null);
+  const startX = useRef(0);
+  const startWidths = useRef<number[]>([]);
 
   const onMouseMove = useCallback((e: MouseEvent) => {
     if (!tableRef.current) return;
     
+    const dx = e.clientX - startX.current;
     const tableWidth = tableRef.current.offsetWidth;
     const cols = Array.from(tableRef.current.getElementsByTagName('col'));
 
@@ -23,45 +26,28 @@ export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled
     const currentTh = cols[colIndex];
     if (!currentTh) return;
 
-    const pageX = e.pageX;
-    const thRect = currentTh.getBoundingClientRect();
-    const tableLeft = tableRef.current.getBoundingClientRect().left;
-
-    const currentThWidth = thRect.width;
-    const nextThWidth = cols[colIndex + 1].getBoundingClientRect().width;
+    const currentWidthPx = (startWidths.current[colIndex] / 100) * tableWidth;
+    const nextWidthPx = (startWidths.current[colIndex+1] / 100) * tableWidth;
     
-    const combinedWidth = currentThWidth + nextThWidth;
+    let newCurrentWidth = currentWidthPx + dx;
+    let newNextWidth = nextWidthPx - dx;
 
-    const newCurrentThWidth = pageX - (tableLeft + currentTh.offsetLeft);
-    const newNextThWidth = combinedWidth - newCurrentThWidth;
+    const minWidthPx = 30;
 
-    if (newCurrentThWidth < 20 || newNextThWidth < 20) return;
-
-    // Convert to percentage
-    const newCurrentWidthPercent = (newCurrentThWidth / tableWidth) * 100;
-    const newNextWidthPercent = (newNextThWidth / tableWidth) * 100;
-
-    const newWidths = cols.map((col, i) => {
-        if (i === colIndex) return newCurrentWidthPercent;
-        if (i === colIndex + 1) return newNextWidthPercent;
-        const colWidth = col.style.width ? parseFloat(col.style.width) : (col.getBoundingClientRect().width / tableWidth) * 100;
-        return colWidth;
-    });
+    if (newCurrentWidth < minWidthPx) {
+        newCurrentWidth = minWidthPx;
+        newNextWidth = currentWidthPx + nextWidthPx - newCurrentWidth;
+    }
     
-    // Distribute remaining width proportionally
-    const updatedWidthsSum = newWidths.reduce((a, b) => a + b, 0);
-    if(Math.abs(100 - updatedWidthsSum) > 0.1) {
-        const otherCols = newWidths.filter((_, i) => i !== colIndex && i !== colIndex + 1);
-        const otherColsSum = otherCols.reduce((a, b) => a + b, 0);
-        const scale = (100 - newCurrentWidthPercent - newNextWidthPercent) / otherColsSum;
-        for(let i=0; i<newWidths.length; i++) {
-            if (i !== colIndex && i !== colIndex + 1) {
-                newWidths[i] *= scale;
-            }
-        }
+    if (newNextWidth < minWidthPx) {
+        newNextWidth = minWidthPx;
+        newCurrentWidth = currentWidthPx + nextWidthPx - newNextWidth;
     }
 
-
+    const newWidths = [...startWidths.current];
+    newWidths[colIndex] = (newCurrentWidth / tableWidth) * 100;
+    newWidths[colIndex+1] = (newNextWidth / tableWidth) * 100;
+    
     onWidthsChange(newWidths);
 
   }, [colIndex, onWidthsChange, tableRef]);
@@ -73,20 +59,28 @@ export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled
     if(resizerRef.current) {
         resizerRef.current.classList.remove('active');
         document.body.style.cursor = '';
+        document.body.style.userSelect = '';
     }
   }, [onMouseMove]);
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    if (!tableRef.current) return;
+
+    startX.current = e.clientX;
+    const cols = Array.from(tableRef.current.getElementsByTagName('col'));
+    startWidths.current = cols.map(col => parseFloat(col.style.width));
+
     if(resizerRef.current) {
         resizerRef.current.classList.add('active');
         document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
     }
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
-  }, [onMouseMove, onMouseUp]);
+  }, [onMouseMove, onMouseUp, tableRef]);
   
-  if (!enabled) return null;
+  if (!enabled || colIndex > 4) return null;
 
   return (
     <div
