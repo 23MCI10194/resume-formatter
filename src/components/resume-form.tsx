@@ -2,13 +2,15 @@
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
 import { Download, RotateCcw } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -50,6 +52,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   });
   
   const { control, watch } = form;
+  const printRef = useRef<HTMLDivElement>(null);
 
   const { fields: skillFields } = useFieldArray({ control, name: "skillsRating" });
 
@@ -62,15 +65,33 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     localStorage.setItem('resumeFormData', JSON.stringify(watchedValues));
   }, [watchedValues]);
   
-  const handlePrint = () => {
-    window.print();
+  const handleDownload = async () => {
+    const input = printRef.current;
+    if (input) {
+      const canvas = await html2canvas(input, {
+          scale: 2, // Increase scale for better quality
+          useCORS: true,
+          backgroundColor: '#ffffff'
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 0;
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save('resume-details.pdf');
+    }
   }
 
   return (
     <Form {...form}>
         <div className="space-y-4 bg-white p-4 sm:p-6 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row gap-2 no-print">
-                <Button type="button" onClick={handlePrint}>
+                <Button type="button" onClick={handleDownload}>
                   <Download className="mr-2 h-4 w-4" /> Download as PDF
                 </Button>
                 <Button type="button" variant="outline" onClick={onReset}>
@@ -78,7 +99,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 </Button>
             </div>
 
-            <div className="printable-card">
+            <div ref={printRef} className="printable-card bg-white">
               <table className="w-full border-collapse border-2 border-black printable-table">
                 <tbody>
                   {/* Basic Information Header */}
