@@ -25,7 +25,7 @@ const FormInput = ({ name, control, label, placeholder }: { name: any, control: 
             <div className="flex items-center">
                 <label className="w-1/3 font-semibold pr-4 text-sm">{label}</label>
                 <div className="w-2/3">
-                    <Input {...field} placeholder={placeholder} className="h-8 text-sm printable-input" />
+                    <Input {...field} value={field.value || ''} placeholder={placeholder} className="h-8 text-sm printable-input" />
                     <FormMessage />
                 </div>
             </div>
@@ -41,7 +41,7 @@ const FormSelect = ({ name, control, label, options }: { name: any, control: any
              <div className="flex items-center">
                 <label className="w-1/3 font-semibold pr-4 text-sm">{label}</label>
                 <div className="w-2/3">
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                             <SelectTrigger className="h-8 text-sm printable-input">
                                 <SelectValue placeholder="Select" />
@@ -69,11 +69,6 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
     name: "skillsRating",
   });
 
-  const handleLoad = useCallback((data: ResumeData) => {
-    onLoadFromStorage(data);
-  }, [onLoadFromStorage]);
-
-
   useEffect(() => {
     try {
         const savedData = localStorage.getItem('resumeFormData');
@@ -81,23 +76,23 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             const parsedData = ResumeDataSchema.parse(JSON.parse(savedData));
              if (parsedData && parsedData.basicInfo.candidateName) {
                 form.reset(parsedData);
-                handleLoad(parsedData);
+                onLoadFromStorage(parsedData);
                 return;
             }
         }
     } catch (e) {
       // Fallback to initialData if localStorage is corrupt
-      form.reset(initialData);
     }
     form.reset(initialData);
-  }, [form, initialData, handleLoad]);
+  }, [initialData, form.reset, onLoadFromStorage]);
+
 
   useEffect(() => {
     const subscription = form.watch((value) => {
       localStorage.setItem('resumeFormData', JSON.stringify(value));
     });
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form.watch]);
 
   const handlePrint = () => {
     window.print();
@@ -160,20 +155,20 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><FormField control={form.control} name="educationDetails.bachelors.degree" render={({field}) => <Input {...field} placeholder="Bachelor's" className="h-8 text-sm printable-input" />} /></td>
-                                        <td><FormField control={form.control} name="educationDetails.bachelors.from" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
-                                        <td><FormField control={form.control} name="educationDetails.bachelors.to" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.bachelors.degree" render={({field}) => <Input {...field} value={field.value || ''} placeholder="Bachelor's" className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.bachelors.from" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.bachelors.to" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
                                     </tr>
                                     <tr>
-                                        <td><FormField control={form.control} name="educationDetails.masters.degree" render={({field}) => <Input {...field} placeholder="Master's" className="h-8 text-sm printable-input" />} /></td>
-                                        <td><FormField control={form.control} name="educationDetails.masters.from" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
-                                        <td><FormField control={form.control} name="educationDetails.masters.to" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.masters.degree" render={({field}) => <Input {...field} value={field.value || ''} placeholder="Master's" className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.masters.from" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.masters.to" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div className="flex items-center mt-1">
                                 <label className="font-semibold pr-4 text-sm w-1/3">Others (Any Certifications):</label>
-                                <FormField control={form.control} name="educationDetails.certifications" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-2/3" />} />
+                                <FormField control={form.control} name="educationDetails.certifications" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-2/3" />} />
                             </div>
                         </div>
                     </div>
@@ -183,17 +178,17 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
                         <div className="p-1 space-y-1">
                             <div className="flex items-center">
                                 <label className="w-1/2 font-semibold pr-4 text-sm">Current / Last Employer:</label>
-                                <FormField control={form.control} name="employmentDetails.currentEmployer" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/2" />} />
+                                <FormField control={form.control} name="employmentDetails.currentEmployer" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/2" />} />
                             </div>
                              <div className="flex items-center">
                                 <label className="w-1/2 font-semibold pr-4 text-sm">Role FTE/ Contract with Current or Last Employer</label>
-                                <FormField control={form.control} name="employmentDetails.employmentType" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/2" />} />
+                                <FormField control={form.control} name="employmentDetails.employmentType" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/2" />} />
                             </div>
                             <div className="flex items-center">
                                 <label className="w-1/4 font-semibold pr-4 text-sm">From</label>
-                                <FormField control={form.control} name="employmentDetails.from" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/4" />} />
+                                <FormField control={form.control} name="employmentDetails.from" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/4" />} />
                                 <label className="w-1/4 font-semibold px-4 text-sm">To</label>
-                                <FormField control={form.control} name="employmentDetails.to" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/4" />} />
+                                <FormField control={form.control} name="employmentDetails.to" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/4" />} />
                             </div>
                              <FormSelect name="employmentDetails.overseasExperience" control={form.control} label="Overseas Experience If Any (Yes/No)" options={['Yes', 'No', 'N/A']} />
                              <FormInput name="employmentDetails.noticePeriod" control={form.control} label="Notice period as per company policy / Serving notice period" />
@@ -235,11 +230,11 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
                         <tbody>
                             {skillFields.map((field, index) => (
                                 <tr key={field.id}>
-                                    <td><FormField control={form.control} name={`skillsRating.${index}.skill`} render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
-                                    <td><FormField control={form.control} name={`skillsRating.${index}.projectsHandled`} render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
-                                    <td><FormField control={form.control} name={`skillsRating.${index}.relevantExperience`} render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
-                                    <td><FormField control={form.control} name={`skillsRating.${index}.candidateRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
-                                    <td><FormField control={form.control} name={`skillsRating.${index}.recruiterRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.skill`} render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.projectsHandled`} render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.relevantExperience`} render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.candidateRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} value={field.value || 1} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.recruiterRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} value={field.value || 1} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -297,3 +292,5 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
     </Form>
   );
 }
+
+    
