@@ -77,77 +77,8 @@ body {
   }
 }
 
-.print-preview body {
-  background-color: white !important;
-  color: black !important;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-  font-size: 9px;
-}
-.print-preview .no-print {
-  display: none !important;
-}
-.print-preview main, .print-preview .printable-area {
-  margin: 0 !important;
-  padding: 0 !important;
-  box-shadow: none !important;
-  border: none !important;
-  background-color: white !important;
-}
-.print-preview .printable-card {
-  border: none !important;
-  box-shadow: none !important;
-  background-color: white !important;
-  padding: 0 !important;
-}
-.print-preview .printable-input, 
-.print-preview .printable-input > div, 
-.print-preview .printable-input > span {
-  border: none !important;
-  background-color: transparent !important;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-  border-radius: 0 !important;
-  padding: 2px 4px !important;
-  height: auto !important;
-  min-height: 20px; 
-  font-size: 9px !important;
-  box-shadow: none !important;
-  outline: none !important;
-  line-height: 1.2;
-  color: black !important;
-}
-.print-preview .printable-table {
-  border-collapse: collapse !important;
-  width: 100% !important;
-  border-spacing: 0;
-}
-.print-preview .printable-table td, .print-preview .printable-table th {
-  border: 1px solid black !important;
-  padding: 4px !important;
-  vertical-align: middle !important;
-  height: 28px !important;
-}
-.print-preview .printable-section-header {
-  background-color: #A67C52 !important; 
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-  color: white !important;
-  text-align: center !important;
-  font-weight: bold !important;
-  padding: 6px !important;
-  font-size: 11px !important;
-}
-.print-preview .bg-header-peach {
-   background-color: #F8C471 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    font-weight: bold;
-}
-.print-preview .font-bold {
-  font-weight: bold !important;
-}
-
+/* Base styles for both print preview and actual print */
+.print-preview body,
 @media print {
   body {
     background-color: white !important;
@@ -156,11 +87,17 @@ body {
     print-color-adjust: exact !important;
     font-size: 9px;
   }
-  
+}
+
+.print-preview .no-print,
+@media print {
   .no-print {
     display: none !important;
   }
+}
 
+.print-preview main, .print-preview .printable-area,
+@media print {
   main, .printable-area {
     margin: 0 !important;
     padding: 0 !important;
@@ -168,14 +105,22 @@ body {
     border: none !important;
     background-color: white !important;
   }
+}
 
+.print-preview .printable-card,
+@media print {
   .printable-card {
     border: none !important;
     box-shadow: none !important;
     background-color: white !important;
     padding: 0 !important;
   }
-  
+}
+
+.print-preview .printable-input, 
+.print-preview .printable-input > div, 
+.print-preview .printable-input > span,
+@media print {
   .printable-input, 
   .printable-input > div, 
   .printable-input > span {
@@ -186,27 +131,38 @@ body {
     border-radius: 0 !important;
     padding: 2px 4px !important;
     height: auto !important;
-    min-height: 20px; /* Ensure a minimum height for empty cells */
+    min-height: 20px; 
     font-size: 9px !important;
     box-shadow: none !important;
     outline: none !important;
     line-height: 1.2;
     color: black !important;
   }
+}
 
+.print-preview .printable-table,
+@media print {
   .printable-table {
     border-collapse: collapse !important;
     width: 100% !important;
     border-spacing: 0;
   }
-  
+}
+
+.print-preview .printable-table td, 
+.print-preview .printable-table th,
+@media print {
   .printable-table td, .printable-table th {
     border: 1px solid black !important;
     padding: 4px !important;
     vertical-align: middle !important;
-    height: 28px !important;
+    height: auto !important;
+    min-height: 28px !important;
   }
+}
 
+.print-preview .printable-section-header,
+@media print {
   .printable-section-header {
     background-color: #A67C52 !important; 
     -webkit-print-color-adjust: exact !important;
@@ -217,14 +173,20 @@ body {
     padding: 6px !important;
     font-size: 11px !important;
   }
-  
+}
+
+.print-preview .bg-header-peach,
+@media print {
   .bg-header-peach {
      background-color: #F8C471 !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       font-weight: bold;
   }
+}
 
+.print-preview .font-bold,
+@media print {
   .font-bold {
     font-weight: bold !important;
   }
