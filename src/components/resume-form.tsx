@@ -56,7 +56,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const { control, watch } = form;
   const printRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const [colWidths, setColWidths] = useState([20, 15, 15, 18, 16, 16]);
 
 
@@ -105,12 +105,12 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     </Button>
                 </div>
                  <div className="flex items-center space-x-2">
-                    <Switch id="edit-mode" checked={isEditMode} onCheckedChange={setIsEditMode} />
-                    <Label htmlFor="edit-mode">Edit Format</Label>
+                    <Switch id="resize-mode" checked={isResizing} onCheckedChange={setIsResizing} />
+                    <Label htmlFor="resize-mode">Resize Columns</Label>
                 </div>
             </div>
 
-            <div ref={printRef} className={cn("printable-area printable-card bg-white p-2", isEditMode && "edit-mode")}>
+            <div ref={printRef} className={"printable-area printable-card bg-white p-2"}>
               <div className="relative">
                 <table 
                     ref={tableRef} 
@@ -130,18 +130,18 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
 
                       {/* Row 1 */}
                       <tr>
-                        <td className="font-bold bg-header-peach"><div className='relative'>Job Posting ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={0} enabled={isEditMode}/></div></td>
+                        <td className="font-bold bg-header-peach"><div className='relative'>Job Posting ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={0} enabled={isResizing}/></div></td>
                         <td><FormInput name="basicInfo.jobPostingId" control={control} /></td>
-                        <td className="font-bold bg-header-peach"><div className='relative'>Job Seeker ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={2} enabled={isEditMode}/></div></td>
+                        <td className="font-bold bg-header-peach"><div className='relative'>Job Seeker ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={2} enabled={isResizing}/></div></td>
                         <td colSpan={3}><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
                       </tr>
 
                        {/* Row 2 */}
                       <tr>
                         <td className="font-bold bg-header-peach">Vendor Name</td>
-                        <td><div className='relative'><FormInput name="basicInfo.vendorName" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={1} enabled={isEditMode}/></div></td>
+                        <td><div className='relative'><FormInput name="basicInfo.vendorName" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={1} enabled={isResizing}/></div></td>
                         <td className="font-bold bg-header-peach">Position Applied</td>
-                        <td colSpan={3}><div className='relative'><FormInput name="basicInfo.positionApplied" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isEditMode}/></div></td>
+                        <td colSpan={3}><div className='relative'><FormInput name="basicInfo.positionApplied" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isResizing}/></div></td>
                       </tr>
 
                       {/* Row 3 */}
