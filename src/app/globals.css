@@ -77,6 +77,77 @@ body {
   }
 }
 
+.print-preview body {
+  background-color: white !important;
+  color: black !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  font-size: 9px;
+}
+.print-preview .no-print {
+  display: none !important;
+}
+.print-preview main, .print-preview .printable-area {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background-color: white !important;
+}
+.print-preview .printable-card {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: white !important;
+  padding: 0 !important;
+}
+.print-preview .printable-input, 
+.print-preview .printable-input > div, 
+.print-preview .printable-input > span {
+  border: none !important;
+  background-color: transparent !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  border-radius: 0 !important;
+  padding: 2px 4px !important;
+  height: auto !important;
+  min-height: 20px; 
+  font-size: 9px !important;
+  box-shadow: none !important;
+  outline: none !important;
+  line-height: 1.2;
+  color: black !important;
+}
+.print-preview .printable-table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  border-spacing: 0;
+}
+.print-preview .printable-table td, .print-preview .printable-table th {
+  border: 1px solid black !important;
+  padding: 4px !important;
+  vertical-align: middle !important;
+  height: 28px !important;
+}
+.print-preview .printable-section-header {
+  background-color: #A67C52 !important; 
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color: white !important;
+  text-align: center !important;
+  font-weight: bold !important;
+  padding: 6px !important;
+  font-size: 11px !important;
+}
+.print-preview .bg-header-peach {
+   background-color: #F8C471 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-weight: bold;
+}
+.print-preview .font-bold {
+  font-weight: bold !important;
+}
+
 @media print {
   body {
     background-color: white !important;
@@ -85,9 +156,11 @@ body {
     print-color-adjust: exact !important;
     font-size: 9px;
   }
+  
   .no-print {
     display: none !important;
   }
+
   main, .printable-area {
     margin: 0 !important;
     padding: 0 !important;
@@ -95,13 +168,17 @@ body {
     border: none !important;
     background-color: white !important;
   }
+
   .printable-card {
     border: none !important;
     box-shadow: none !important;
     background-color: white !important;
     padding: 0 !important;
   }
-  .printable-input {
+  
+  .printable-input, 
+  .printable-input > div, 
+  .printable-input > span {
     border: none !important;
     background-color: transparent !important;
     -webkit-print-color-adjust: exact !important;
@@ -109,21 +186,25 @@ body {
     border-radius: 0 !important;
     padding: 2px 4px !important;
     height: auto !important;
+    min-height: 20px; /* Ensure a minimum height for empty cells */
     font-size: 9px !important;
     box-shadow: none !important;
     outline: none !important;
+    line-height: 1.2;
+    color: black !important;
   }
 
   .printable-table {
-    border-collapse: collapse;
-    width: 100%;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    border-spacing: 0;
   }
   
   .printable-table td, .printable-table th {
-    border: 1px solid black;
-    padding: 4px;
-    vertical-align: middle;
-    height: 28px;
+    border: 1px solid black !important;
+    padding: 4px !important;
+    vertical-align: middle !important;
+    height: 28px !important;
   }
 
   .printable-section-header {
@@ -138,19 +219,18 @@ body {
   }
   
   .bg-header-peach {
-     background-color: #F8C471 !important; /* Lighter peach */
+     background-color: #F8C471 !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       font-weight: bold;
   }
 
   .font-bold {
-    font-weight: bold;
-  }
-  
-  @page {
-    size: A4;
-    margin: 1cm;
+    font-weight: bold !important;
   }
 }
 
+@page {
+  size: A4;
+  margin: 1cm;
+}

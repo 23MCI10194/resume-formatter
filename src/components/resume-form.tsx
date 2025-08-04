@@ -32,7 +32,7 @@ const FormSelect = ({ name, control, options }: { name: any, control: any, optio
         control={control}
         name={name}
         render={({ field }) => (
-            <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+            <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value || 'N/A'}>
                 <SelectTrigger className="h-full w-full bg-transparent border-none rounded-none focus:ring-0 focus:ring-offset-0 focus:shadow-none text-sm printable-input">
                     <SelectValue placeholder="Select" />
                 </SelectTrigger>
@@ -68,21 +68,31 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const handleDownload = async () => {
     const input = printRef.current;
     if (input) {
+      // Temporarily add print-specific classes for rendering
+      document.body.classList.add('print-preview');
+      
       const canvas = await html2canvas(input, {
-          scale: 2, // Increase scale for better quality
+          scale: 3, // Increase scale for much better quality
           useCORS: true,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          logging: false,
       });
+
+      // Remove the temporary classes after rendering
+      document.body.classList.remove('print-preview');
+
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF('p', 'mm', 'a4', true);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      
       const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      const imgY = 0; // Start from top
+
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio, undefined, 'FAST');
       pdf.save('resume-details.pdf');
     }
   }
@@ -99,7 +109,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 </Button>
             </div>
 
-            <div ref={printRef} className="printable-card bg-white">
+            <div ref={printRef} className="printable-card bg-white p-2">
               <table className="w-full border-collapse border-2 border-black printable-table">
                 <tbody>
                   {/* Basic Information Header */}
@@ -121,7 +131,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     <td><FormInput name="basicInfo.vendorName" control={control} /></td>
                     <td className="font-bold bg-header-peach">Position Applied</td>
                     <td colSpan={2}><FormInput name="basicInfo.positionApplied" control={control} /></td>
-                    <td className='bg-header-peach font-bold'>Skill Name <FormInput name="basicInfo.skillName" control={control}/></td>
+                    <td className='bg-header-peach font-bold text-center'>Skill Name<FormInput name="basicInfo.skillName" control={control}/></td>
                   </tr>
 
                   {/* Row 3 */}
@@ -171,9 +181,9 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                   </tr>
 
                   <tr>
-                    <td className='font-bold bg-header-peach'>Degree</td>
-                    <td className='font-bold bg-header-peach'>From</td>
-                    <td className='font-bold bg-header-peach'>To</td>
+                    <td className='font-bold bg-header-peach text-center'>Degree</td>
+                    <td className='font-bold bg-header-peach text-center'>From</td>
+                    <td className='font-bold bg-header-peach text-center'>To</td>
                     <td className='font-bold bg-header-peach' colSpan={2}>Current / Last Employer:</td>
                     <td><FormInput name="employmentDetails.currentEmployer" control={control}/></td>
                   </tr>
@@ -234,7 +244,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                   </tr>
                   {skillFields.map((field, index) => (
                     <tr key={field.id}>
-                        <td><FormInput name={`skillsRating.${index}.skill`} control={control} /></td>
+                        <td className="h-8"><FormInput name={`skillsRating.${index}.skill`} control={control} /></td>
                         <td><FormInput name={`skillsRating.${index}.projectsHandled`} control={control} /></td>
                         <td><FormInput name={`skillsRating.${index}.relevantExperience`} control={control} /></td>
                         <td><FormInput name={`skillsRating.${index}.candidateRating`} control={control} /></td>
