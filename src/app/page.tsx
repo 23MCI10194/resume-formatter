@@ -104,10 +104,6 @@ export default function Home() {
     localStorage.removeItem('resumeFormData');
   };
   
-  const handleLoadFromStorage = useCallback((data: ResumeData) => {
-    setResumeData(data);
-  }, []);
-
   return (
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
       <div className="w-full max-w-6xl mx-auto">
@@ -128,7 +124,7 @@ export default function Home() {
               <p className="mt-4 text-muted-foreground">Checking for saved session...</p>
             </div>
           ) : resumeData ? (
-            <ResumeForm initialData={resumeData} onReset={handleReset} onLoadFromStorage={handleLoadFromStorage} />
+            <ResumeForm initialData={resumeData} onReset={handleReset} />
           ) : (
             <ResumeUploader onUpload={handleResumeParse} isLoading={isLoading} />
           )}

@@ -14,7 +14,6 @@ import { Download, RotateCcw } from 'lucide-react';
 interface ResumeFormProps {
   initialData: ResumeData;
   onReset: () => void;
-  onLoadFromStorage: (data: ResumeData) => void;
 }
 
 const FormInput = ({ name, control, label, placeholder }: { name: any, control: any, label: string, placeholder?: string }) => (
@@ -58,7 +57,7 @@ const FormSelect = ({ name, control, label, options }: { name: any, control: any
     />
 );
 
-export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: ResumeFormProps) {
+export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const form = useForm<ResumeData>({
     resolver: zodResolver(ResumeDataSchema),
     defaultValues: initialData,
@@ -76,7 +75,6 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
             const parsedData = ResumeDataSchema.parse(JSON.parse(savedData));
              if (parsedData && parsedData.basicInfo.candidateName) {
                 form.reset(parsedData);
-                onLoadFromStorage(parsedData);
                 return;
             }
         }
@@ -84,7 +82,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
       // Fallback to initialData if localStorage is corrupt
     }
     form.reset(initialData);
-  }, [initialData, form.reset, onLoadFromStorage]);
+  }, [initialData, form.reset]);
 
 
   useEffect(() => {
@@ -292,5 +290,3 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
     </Form>
   );
 }
-
-    
