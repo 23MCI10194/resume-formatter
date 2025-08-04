@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
-import { Download, RotateCcw, Printer } from 'lucide-react';
+import { Printer, RotateCcw } from 'lucide-react';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -100,8 +100,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     <td className="font-bold bg-header-peach">Vendor Name</td>
                     <td><FormInput name="basicInfo.vendorName" control={control} /></td>
                     <td className="font-bold bg-header-peach">Position Applied</td>
-                    <td colSpan={2}><FormInput name="basicInfo.positionApplied" control={control} /></td>
-                    <td className='bg-header-peach font-bold text-center'>Skill Name<FormInput name="basicInfo.skillName" control={control}/></td>
+                    <td colSpan={3}><FormInput name="basicInfo.positionApplied" control={control} /></td>
                   </tr>
 
                   {/* Row 3 */}
