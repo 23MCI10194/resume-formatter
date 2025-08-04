@@ -39,7 +39,7 @@ const ParseResumeDataOutputSchema = z.object({
   })).describe('The education history of the candidate.'),
   skills: z.array(z.object({
     skillName: z.string().describe('The name of the skill.'),
-    rating: z.number().describe('The rating of the skill (out of 5).'),
+    rating: z.number().min(1).max(5).describe('The rating of the skill (out of 5). A value of 0 is not allowed.'),
   })).describe('The skills of the candidate.'),
   location: z.object({
     currentLocation: z.string().describe('The current location of the candidate.'),
@@ -74,7 +74,7 @@ You will be given a resume as a data URI. Extract the following information from
 - Personal Details (full name, contact details (phone, email))
 - Experience (total experience, relevant experience)
 - Education (degree, major, university, graduation date)
-- Skills (skill name, rating (out of 5))
+- Skills (skill name, rating (out of 5, where 1 is the minimum))
 - Location (current location, preferred location)
 - Employment History (company, role, start date, end date)
 - Additional Details (notice period, current offer, reason for change)
