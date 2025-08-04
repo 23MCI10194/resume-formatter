@@ -11,7 +11,8 @@ import { Icons } from '@/components/icons';
 
 export default function Home() {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Start true to check localStorage
+  const [isLoading, setIsLoading] = useState(true);
+  const [isParsing, setIsParsing] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function Home() {
   }, []);
 
   const handleResumeParse = async (file: File) => {
-    setIsLoading(true);
+    setIsParsing(true);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
@@ -40,34 +41,25 @@ export default function Home() {
       try {
         const result: ParseResumeDataOutput = await parseResumeData({ resumeDataUri: dataUri });
         
-        const currentData = resumeData ? {...resumeData} : ResumeDataSchema.parse({});
-
+        // Get a fresh default object
+        const defaultData = ResumeDataSchema.parse({});
+        
         const fullData: ResumeData = {
-          ...currentData,
-          basicInfo: {
-            ...currentData.basicInfo,
-            ...result.basicInfo,
+          ...defaultData,
+          basicInfo: { ...defaultData.basicInfo, ...result.basicInfo },
+          educationDetails: { ...defaultData.educationDetails, ...result.educationDetails },
+          employmentDetails: { ...defaultData.employmentDetails, ...result.employmentDetails },
+          skillsRating: result.skillsRating.length > 0 
+            ? result.skillsRating.map((skill, index) => ({
+                ...defaultData.skillsRating[index],
+                ...skill,
+              }))
+            : defaultData.skillsRating,
+          otherInfo: { ...defaultData.otherInfo, ...result.otherInfo },
+          recruiterDetails: { 
+            ...defaultData.recruiterDetails,
+            deloitteRecruiter: "HR Name" // Placeholder
           },
-          educationDetails: {
-            ...currentData.educationDetails,
-            ...result.educationDetails,
-          },
-          employmentDetails: {
-            ...currentData.employmentDetails,
-            ...result.employmentDetails
-          },
-          skillsRating: (result.skillsRating.length > 0 ? result.skillsRating : currentData.skillsRating).map((skill, index) => ({
-            ...currentData.skillsRating[index],
-            ...skill,
-          })),
-          otherInfo: {
-            ...currentData.otherInfo,
-            ...result.otherInfo,
-          },
-          recruiterDetails: {
-            ...currentData.recruiterDetails,
-            deloitteRecruiter: "HR Name", // Placeholder
-          }
         };
 
         const validatedData = ResumeDataSchema.parse(fullData);
@@ -87,11 +79,11 @@ export default function Home() {
           description: "There was a problem parsing your resume. The file might be corrupted or in an unsupported format.",
         });
       } finally {
-        setIsLoading(false);
+        setIsParsing(false);
       }
     };
     reader.onerror = () => {
-      setIsLoading(false);
+      setIsParsing(false);
       toast({
         variant: "destructive",
         title: "File Error",
@@ -100,10 +92,10 @@ export default function Home() {
     }
   };
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setResumeData(null);
     localStorage.removeItem('resumeFormData');
-  };
+  }, []);
   
   return (
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
@@ -127,12 +119,10 @@ export default function Home() {
           ) : resumeData ? (
             <ResumeForm initialData={resumeData} onReset={handleReset} />
           ) : (
-            <ResumeUploader onUpload={handleResumeParse} isLoading={isLoading} />
+            <ResumeUploader onUpload={handleResumeParse} isLoading={isParsing} />
           )}
         </div>
       </div>
     </main>
   );
 }
-
-    
