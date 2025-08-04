@@ -82,5 +82,3 @@ export const ResumeDataSchema = z.object({
 });
 
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
-
-    

@@ -188,61 +188,43 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={3} className="printable-section-header">Education Details</td>
                         <td colSpan={3} className="printable-section-header">Employment Details</td>
                       </tr>
-                      
-                      <tr>
-                        <td colSpan={3}>
-                           <div className="flex items-center">
-                            <span className="font-bold p-2">Bachelor's:</span>
-                            <FormInput name="educationDetails.bachelors.degree" control={control}/>
-                          </div>
-                        </td>
-                         <td colSpan={3} rowSpan={2}>
-                          <div className="flex items-center h-full">
-                            <span className="font-bold p-2">Current/Last:</span>
-                            <FormInput name="employmentDetails.currentEmployer" control={control}/>
-                           </div>
-                         </td>
+                      <tr className='bg-header-peach font-bold'>
+                        <td>Degree</td>
+                        <td>From</td>
+                        <td>To</td>
+                        <td>Employment Details</td>
+                        <td>From</td>
+                        <td>To</td>
                       </tr>
                       <tr>
-                          <td colSpan={1}><div className="flex items-center"><span className="font-bold p-2">From:</span><FormInput name="educationDetails.bachelors.from" control={control}/></div></td>
-                          <td colSpan={2}><div className="flex items-center"><span className="font-bold p-2">To:</span><FormInput name="educationDetails.bachelors.to" control={control}/></div></td>
-                      </tr>
-                       <tr>
-                        <td colSpan={3}>
-                           <div className="flex items-center">
-                            <span className="font-bold p-2">Master's:</span>
-                            <FormInput name="educationDetails.masters.degree" control={control}/>
-                          </div>
-                        </td>
-                         <td colSpan={1}><div className="flex items-center h-full"><span className="font-bold p-2">From:</span><FormInput name="employmentDetails.from" control={control}/></div></td>
-                         <td colSpan={2}><div className="flex items-center h-full"><span className="font-bold p-2">To:</span><FormInput name="employmentDetails.to" control={control}/></div></td>
-                      </tr>
-                       <tr>
-                          <td colSpan={1}><div className="flex items-center"><span className="font-bold p-2">From:</span><FormInput name="educationDetails.masters.from" control={control}/></div></td>
-                          <td colSpan={2}><div className="flex items-center"><span className="font-bold p-2">To:</span><FormInput name="educationDetails.masters.to" control={control}/></div></td>
-                        <td className='font-bold' colSpan={1}>Role FTE/ Contract:</td>
-                        <td colSpan={2}><FormInput name="employmentDetails.employmentType" control={control}/></td>
-                      </tr>
-                       <tr>
-                         <td className='font-bold' colSpan={1}>Certifications:</td>
-                         <td colSpan={2}><FormInput name="educationDetails.certifications" control={control}/></td>
-                        <td className='font-bold' colSpan={1}>Notice period:</td>
-                        <td colSpan={2}><FormInput name="employmentDetails.noticePeriod" control={control}/></td>
-                      </tr>
-                       <tr>
-                        <td className='font-bold' colSpan={2}>Awareness about Contract Role (Yes/No)</td>
-                        <td colSpan={1}><FormSelect name="educationDetails.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                        <td className='font-bold' colSpan={2}>Shifts (Yes/No):</td>
-                        <td colSpan={1}><FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                        <td><div className='flex items-center'><span className='p-2 font-bold'>Bachelor's:</span><FormInput name="educationDetails.bachelors.degree" control={control} /></div></td>
+                        <td><FormInput name="educationDetails.bachelors.from" control={control} /></td>
+                        <td><FormInput name="educationDetails.bachelors.to" control={control} /></td>
+                        <td><div className='flex items-center'><span className='p-2 font-bold'>Current / Last Employer:</span><FormInput name="employmentDetails.currentEmployer" control={control} /></div></td>
+                        <td><FormInput name="employmentDetails.from" control={control} /></td>
+                        <td><FormInput name="employmentDetails.to" control={control} /></td>
                       </tr>
                       <tr>
-                        <td className='font-bold' colSpan={2}>Holding any other offers (Yes/No)</td>
-                        <td colSpan={1}><FormSelect name="educationDetails.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                        <td colSpan={3} rowSpan={2}><div className='flex items-center h-full'><span className='font-bold p-2'>Reason for Change:</span><FormInput name="educationDetails.reasonForChange" control={control}/></div></td>
+                        <td><div className='flex items-center'><span className='p-2 font-bold'>Master's:</span><FormInput name="educationDetails.masters.degree" control={control} /></div></td>
+                        <td><FormInput name="educationDetails.masters.from" control={control} /></td>
+                        <td><FormInput name="educationDetails.masters.to" control={control} /></td>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Role FTE/ Contract with Current or Last Employer:</span><FormInput name="employmentDetails.employmentType" control={control} /></div></td>
+                      </tr>
+                      <tr>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Others (Any Certifications):</span><FormInput name="educationDetails.certifications" control={control} /></div></td>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Overseas Experience If Any (Yes/No):</span><FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
                       </tr>
                        <tr>
-                        <td className='font-bold' colSpan={2}>Overseas Experience If Any (Yes/No):</td>
-                        <td colSpan={1}><FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Awareness about Contract Role (Yes/No):</span><FormSelect name="educationDetails.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Notice period as per company policy / Serving notice period:</span><FormInput name="employmentDetails.noticePeriod" control={control} /></div></td>
+                      </tr>
+                       <tr>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Holding any other offers (Yes/No):</span><FormSelect name="educationDetails.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Bench/ Market Profile:</span><FormInput name="employmentDetails.benchMarketProfile" control={control} /></div></td>
+                      </tr>
+                       <tr>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Reason for Change:</span><FormInput name="educationDetails.reasonForChange" control={control} /></div></td>
+                        <td colSpan={3}><div className='flex items-center'><span className='p-2 font-bold'>Shifts (Yes/No):</span><FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
                       </tr>
 
                        {/* Skills Header */}
@@ -279,10 +261,6 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={6} className="printable-section-header">Other Information</td>
                       </tr>
                        <tr>
-                        <td className='font-bold' colSpan={2}>Bench/ Market Profile:</td>
-                        <td colSpan={4}><FormInput name="employmentDetails.benchMarketProfile" control={control}/></td>
-                      </tr>
-                      <tr>
                         <td colSpan={2} className="font-bold bg-header-peach">Earlier worked with Deloitte (Yes/No)</td>
                         <td><FormSelect name="otherInfo.earlierWorkedWithDeloitte" control={control} options={['Yes', 'No', 'N/A']} /></td>
                         <td colSpan={2} className="font-bold bg-header-peach">If Yes, Tenure (From/To)</td>
@@ -331,5 +309,3 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     </Form>
   );
 }
-
-    
