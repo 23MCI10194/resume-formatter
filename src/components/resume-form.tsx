@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form } from '@/components/ui/form';
 import { Printer, RotateCcw } from 'lucide-react';
 import ColResizer from './col-resizer';
-import { cn } from '@/lib/utils';
 
 interface ResumeFormProps {
   initialData: ResumeData;

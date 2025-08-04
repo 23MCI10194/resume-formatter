@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ColResizerProps {
@@ -16,23 +16,26 @@ export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled
     if (!tableRef.current) return;
     
     const tableWidth = tableRef.current.offsetWidth;
-    const ths = Array.from(tableRef.current.querySelectorAll('th, td'));
     const cols = Array.from(tableRef.current.getElementsByTagName('col'));
 
     if (colIndex >= cols.length -1) return;
 
-    const currentTh = ths.find(th => th.cellIndex === colIndex);
+    const currentTh = cols[colIndex];
     if (!currentTh) return;
 
     const pageX = e.pageX;
     const thRect = currentTh.getBoundingClientRect();
+    const tableLeft = tableRef.current.getBoundingClientRect().left;
+
     const currentThWidth = thRect.width;
     const nextThWidth = cols[colIndex + 1].getBoundingClientRect().width;
     
     const combinedWidth = currentThWidth + nextThWidth;
 
-    const newCurrentThWidth = pageX - thRect.left;
+    const newCurrentThWidth = pageX - (tableLeft + currentTh.offsetLeft);
     const newNextThWidth = combinedWidth - newCurrentThWidth;
+
+    if (newCurrentThWidth < 20 || newNextThWidth < 20) return;
 
     // Convert to percentage
     const newCurrentWidthPercent = (newCurrentThWidth / tableWidth) * 100;
@@ -41,8 +44,23 @@ export default function ColResizer({ tableRef, onWidthsChange, colIndex, enabled
     const newWidths = cols.map((col, i) => {
         if (i === colIndex) return newCurrentWidthPercent;
         if (i === colIndex + 1) return newNextWidthPercent;
-        return (col.getBoundingClientRect().width / tableWidth) * 100;
+        const colWidth = col.style.width ? parseFloat(col.style.width) : (col.getBoundingClientRect().width / tableWidth) * 100;
+        return colWidth;
     });
+    
+    // Distribute remaining width proportionally
+    const updatedWidthsSum = newWidths.reduce((a, b) => a + b, 0);
+    if(Math.abs(100 - updatedWidthsSum) > 0.1) {
+        const otherCols = newWidths.filter((_, i) => i !== colIndex && i !== colIndex + 1);
+        const otherColsSum = otherCols.reduce((a, b) => a + b, 0);
+        const scale = (100 - newCurrentWidthPercent - newNextWidthPercent) / otherColsSum;
+        for(let i=0; i<newWidths.length; i++) {
+            if (i !== colIndex && i !== colIndex + 1) {
+                newWidths[i] *= scale;
+            }
+        }
+    }
+
 
     onWidthsChange(newWidths);
 
