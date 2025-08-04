@@ -65,11 +65,15 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
+  const handlePrint = () => {
+    window.print();
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(() => window.print())} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handlePrint)} className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-2 no-print">
-            <Button type="button" onClick={() => window.print()}>
+            <Button type="submit">
               <Download /> Download as PDF
             </Button>
             <Button type="button" variant="outline" onClick={onReset}>
