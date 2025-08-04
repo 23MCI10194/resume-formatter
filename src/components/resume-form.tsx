@@ -92,19 +92,20 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   }, [form.watch]);
 
   const handlePrint = () => {
+    // Save the latest form data to localStorage before printing
+    localStorage.setItem('resumeFormData', JSON.stringify(form.getValues()));
     window.print();
   }
 
   const onSubmit = (data: ResumeData) => {
-    console.log('Form submitted for printing:', data);
-    handlePrint();
+    console.log('Form submitted (should not happen on download):', data);
   }
   
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 bg-white p-4 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row gap-2 no-print">
-                <Button type="submit">
+                <Button type="button" onClick={handlePrint}>
                   <Download className="mr-2 h-4 w-4" /> Download as PDF
                 </Button>
                 <Button type="button" variant="outline" onClick={onReset}>
@@ -289,5 +290,3 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     </Form>
   );
 }
-
-    
