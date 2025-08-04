@@ -77,6 +77,16 @@ body {
   }
 }
 
+.printable-section-header {
+    background-color: #F5BCA9 !important;
+    color: white !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    padding: 2px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
 @media print {
   @page {
     size: A4;
@@ -139,7 +149,7 @@ body {
   }
 
   .printable-section-header {
-    background-color: #A67C52 !important;
+    background-color: #F5BCA9 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color: white !important;
