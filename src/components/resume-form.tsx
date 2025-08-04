@@ -148,70 +148,68 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={2} className="border border-black"><FormSelect name="basicInfo.workPreference" control={control} options={['Office', 'Home', 'Both', 'N/A']} /></td>
                       </tr>
                       
-                      {/* Education Details Header */}
+                      {/* Education and Employment Details Header */}
                       <tr>
-                        <td colSpan={6} className="printable-section-header">Education Details</td>
+                        <td colSpan={3} className="printable-section-header">Education Details</td>
+                        <td colSpan={3} className="printable-section-header">Employment Details</td>
                       </tr>
-                      <tr className='font-bold'>
-                        <td className="border border-black text-center p-2">Degree</td>
-                        <td className="border border-black text-center p-2" colSpan={3}></td>
-                        <td className="border border-black text-center p-2">From</td>
-                        <td className="border border-black text-center p-2">To</td>
-                      </tr>
+                      
                       <tr>
-                        <td className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Bachelor's:</span><FormInput name="educationDetails.bachelors.degree" control={control} /></div></td>
-                        <td colSpan={3}></td>
-                        <td className="border border-black"><FormInput name="educationDetails.bachelors.from" control={control} /></td>
-                        <td className="border border-black"><FormInput name="educationDetails.bachelors.to" control={control} /></td>
+                        {/* Education Details Sub-Header */}
+                        <td className="border border-black text-center p-2 font-bold">Degree</td>
+                        <td className="border border-black text-center p-2 font-bold">From</td>
+                        <td className="border border-black text-center p-2 font-bold">To</td>
+
+                        {/* Employment Details Sub-Header */}
+                        <td className="border border-black text-center p-2 font-bold">Employment Details</td>
+                        <td className="border border-black text-center p-2 font-bold">From</td>
+                        <td className="border border-black text-center p-2 font-bold">To</td>
                       </tr>
+                      
                       <tr>
-                        <td className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Master's:</span><FormInput name="educationDetails.masters.degree" control={control} /></div></td>
-                        <td colSpan={3}></td>
-                        <td className="border border-black"><FormInput name="educationDetails.masters.from" control={control} /></td>
-                        <td className="border border-black"><FormInput name="educationDetails.masters.to" control={control} /></td>
-                      </tr>
-                      <tr>
-                        <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Others (Any Certifications):</span><FormInput name="educationDetails.certifications" control={control} /></div></td>
-                      </tr>
-                      <tr>
-                        <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Awareness about Contract Role (Yes/No):</span><FormSelect name="educationDetails.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
-                      </tr>
-                       <tr>
-                        <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Holding any other offers (Yes/No):</span><FormSelect name="educationDetails.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
-                      </tr>
-                       <tr>
-                        <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Reason for Change:</span><FormInput name="educationDetails.reasonForChange" control={control} /></div></td>
+                          {/* Bachelors and Current Employer */}
+                          <td className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Bachelor's:</span><FormInput name="educationDetails.bachelors.degree" control={control} /></div></td>
+                          <td className="border border-black"><FormInput name="educationDetails.bachelors.from" control={control} /></td>
+                          <td className="border border-black"><FormInput name="educationDetails.bachelors.to" control={control} /></td>
+
+                          <td className="border border-black"><div className='flex items-center h-full'><span className='p-2 font-bold'>Current / Last Employer:</span><FormInput name="employmentDetails.currentEmployer" control={control} /></div></td>
+                          <td className="border border-black"><FormInput name="employmentDetails.from" control={control} /></td>
+                          <td className="border border-black"><FormInput name="employmentDetails.to" control={control} /></td>
                       </tr>
 
-                      {/* Employment Details Header */}
                       <tr>
-                        <td colSpan={6} className="printable-section-header">Employment Details</td>
+                          {/* Masters and Role */}
+                          <td className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Master's:</span><FormInput name="educationDetails.masters.degree" control={control} /></div></td>
+                          <td className="border border-black"><FormInput name="educationDetails.masters.from" control={control} /></td>
+                          <td className="border border-black"><FormInput name="educationDetails.masters.to" control={control} /></td>
+
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Role FTE/ Contract with Current or Last Employer:</span><FormInput name="employmentDetails.employmentType" control={control} /></div></td>
                       </tr>
-                       <tr className='font-bold'>
-                        <td className="border border-black text-center p-2" colSpan={4}>Employment Details</td>
-                        <td className="border border-black text-center p-2">From</td>
-                        <td className="border border-black text-center p-2">To</td>
-                      </tr>
+                      
                       <tr>
-                        <td className="border border-black" colSpan={4}><div className='flex items-center h-full'><span className='p-2 font-bold'>Current / Last Employer:</span><FormInput name="employmentDetails.currentEmployer" control={control} /></div></td>
-                        <td className="border border-black"><FormInput name="employmentDetails.from" control={control} /></td>
-                        <td className="border border-black"><FormInput name="employmentDetails.to" control={control} /></td>
+                          {/* Certifications and Overseas Exp */}
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Others (Any Certifications):</span><FormInput name="educationDetails.certifications" control={control} /></div></td>
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Overseas Experience If Any (Yes/No):</span><FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
                       </tr>
+
                       <tr>
-                          <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Role FTE/ Contract with Current or Last Employer:</span><FormInput name="employmentDetails.employmentType" control={control} /></div></td>
+                          {/* Contract Awareness and Notice Period */}
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Awareness about Contract Role (Yes/No):</span><FormSelect name="educationDetails.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Notice period as per company policy / Serving notice period:</span><FormInput name="employmentDetails.noticePeriod" control={control} /></div></td>
                       </tr>
-                      <tr>
-                          <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Overseas Experience If Any (Yes/No):</span><FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
+
+                       <tr>
+                          {/* Holding Offers and Bench Profile */}
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Holding any other offers (Yes/No):</span><FormSelect name="educationDetails.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Bench/ Market Profile:</span><FormInput name="employmentDetails.benchMarketProfile" control={control} /></div></td>
                       </tr>
-                      <tr>
-                          <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Notice period as per company policy / Serving notice period:</span><FormInput name="employmentDetails.noticePeriod" control={control} /></div></td>
+
+                       <tr>
+                          {/* Reason for Change and Shifts */}
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Reason for Change:</span><FormInput name="educationDetails.reasonForChange" control={control} /></div></td>
+                          <td colSpan={3} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Shifts (Yes/No):</span><FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
                       </tr>
-                      <tr>
-                          <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Bench/ Market Profile:</span><FormInput name="employmentDetails.benchMarketProfile" control={control} /></div></td>
-                      </tr>
-                      <tr>
-                          <td colSpan={6} className="border border-black"><div className='flex items-center'><span className='p-2 font-bold'>Shifts (Yes/No):</span><FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></div></td>
-                      </tr>
+
 
                        {/* Skills Header */}
                       <tr>
