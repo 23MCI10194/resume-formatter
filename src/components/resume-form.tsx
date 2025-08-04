@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
 import { Download, RotateCcw } from 'lucide-react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import htmlToDocx from 'html-to-docx';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -68,32 +68,44 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const handleDownload = async () => {
     const input = printRef.current;
     if (input) {
-      // Temporarily add print-specific classes for rendering
       document.body.classList.add('print-preview');
-      
-      const canvas = await html2canvas(input, {
-          scale: 3, // Increase scale for much better quality
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-      });
-
-      // Remove the temporary classes after rendering
+      const htmlString = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              ${Array.from(document.styleSheets)
+                .map(sheet => {
+                  try {
+                    return Array.from(sheet.cssRules)
+                      .map(rule => rule.cssText)
+                      .join('');
+                  } catch (e) {
+                    console.warn('Could not read stylesheet rules', e);
+                    return '';
+                  }
+                })
+                .join('\n')}
+            </style>
+          </head>
+          <body>
+            ${input.innerHTML}
+          </body>
+        </html>
+      `;
       document.body.classList.remove('print-preview');
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4', true);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
       
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0; // Start from top
-
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio, undefined, 'FAST');
-      pdf.save('resume-details.pdf');
+      try {
+        const fileBuffer = await htmlToDocx(htmlString, undefined, {
+          table: { row: { cantSplit: true } },
+          footer: false,
+          header: false,
+        });
+  
+        saveAs(fileBuffer, 'resume-details.docx');
+      } catch (error) {
+        console.error("Error generating DOCX:", error);
+      }
     }
   }
 
@@ -102,7 +114,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
         <div className="space-y-4 bg-white p-4 sm:p-6 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row gap-2 no-print">
                 <Button type="button" onClick={handleDownload}>
-                  <Download className="mr-2 h-4 w-4" /> Download as PDF
+                  <Download className="mr-2 h-4 w-4" /> Download as Word
                 </Button>
                 <Button type="button" variant="outline" onClick={onReset}>
                   <RotateCcw className="mr-2 h-4 w-4" /> Start Over
