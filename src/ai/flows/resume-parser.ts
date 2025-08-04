@@ -46,6 +46,9 @@ const ParseResumeDataOutputSchema = z.object({
           to: z.string().describe("End date or graduation date of Master's degree."),
         }),
         certifications: z.string().describe("Any other relevant certifications mentioned."),
+        awarenessAboutContractRole: YesNoSchema,
+        holdingOtherOffers: YesNoSchema,
+        reasonForChange: z.string(),
     }).describe('Education Details section'),
 
     employmentDetails: z.object({
@@ -54,15 +57,28 @@ const ParseResumeDataOutputSchema = z.object({
         from: z.string().describe("Start date of the most recent employment."),
         to: z.string().describe("End date of the most recent employment (or 'Present')."),
         noticePeriod: z.string().describe("The notice period required for leaving the current job."),
+        overseasExperience: YesNoSchema,
+        benchMarketProfile: z.string(),
+        shifts: YesNoSchema,
     }).describe('Employment Details section'),
 
     skillsRating: z.array(z.object({
         skill: z.string().describe("A key skill possessed by the candidate."),
+        projectsHandled: z.string().describe("Number of projects handled for this skill."),
+        relevantExperience: z.string().describe("Years of experience with this skill."),
         candidateRating: z.number().min(1).max(5).describe("Candidate's proficiency in this skill, rated 1 (Poor) to 5 (Excellent). Infer this from the resume."),
     })).min(3).max(3).describe("A list of the top 3 most relevant skills from the resume."),
 
     otherInfo: z.object({
-        reasonForChange: z.string().describe("The candidate's reason for seeking a new job, if mentioned."),
+        communicationSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']),
+        listeningSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']),
+        earlierWorkedWithDeloitte: YesNoSchema,
+        deloitteFteContract: z.string().describe("If yes, was it FTE or contract?"),
+        deloitteEntity: z.string().describe("If yes, which Deloitte entity?"),
+        tenure: z.string().describe("If yes, tenure (From/To)"),
+        reasonToLeaveDeloitte: z.string().describe("If yes, reason to leave Deloitte"),
+        longLeavePlan: YesNoSchema,
+        otherInput: z.string().describe("Any other Input / Comments / Concerns"),
     }).describe('Other Information section'),
 });
 
@@ -84,7 +100,7 @@ const resumeParserPrompt = ai.definePrompt({
   - Contact No: Phone number.
   - Email: Email address.
   - Total Experience: Summarize total years of professional experience.
-  - Relevant Experience: Summarize years of experience relevant to the target role.
+  - Relevant Experience: State the number of years of experience relevant to the target role (e.g., '5 years').
   - Current Location: City, State/Country.
   - Preferred Location: Any mentioned preferred work locations.
   - Relocation: Is the candidate willing to relocate? (Yes/No/N/A).
@@ -93,18 +109,32 @@ const resumeParserPrompt = ai.definePrompt({
   - Bachelors: Degree, start date, and end date.
   - Masters: Degree, start date, and end date (if applicable).
   - Certifications: List any other certifications.
+  - Awareness about Contract Role: (Yes/No/N/A).
+  - Holding any other offers: (Yes/No/N/A).
+  - Reason for Change: Any stated reason for looking for a new job.
 
 - **Employment Details**:
   - Current/Last Employer: Name of the company.
   - Employment Type: e.g., Full-Time, Contract.
   - From/To Dates: Employment duration for the latest role.
   - Notice Period: If mentioned.
+  - Overseas Experience If Any: (Yes/No/N/A).
+  - Bench/ Market Profile:
+  - Shifts: (Yes/No/N/A).
 
 - **Skills Rating**:
-  - Identify the top 3 skills from the resume. For each skill, provide a rating from 1 to 5 based on your interpretation of their proficiency from the projects and experience described. 1 is poor, 5 is excellent.
+  - Identify the top 3 skills from the resume. For each skill, provide a rating from 1 to 5 based on your interpretation of their proficiency from the projects and experience described. 1 is poor, 5 is excellent. Also include number of projects and years of experience for each skill.
 
 - **Other Information**:
-  - Reason for Change: Any stated reason for looking for a new job.
+  - Communication Skills: (Poor/Average/Excellent/N/A).
+  - Listening Skills: (Poor/Average/Excellent/N/A).
+  - Earlier worked with Deloitte: (Yes/No/N/A).
+  - If Yes, Deloitte (FTE/Contract):
+  - If Yes, Deloitte Entity:
+  - If Yes, Tenure (From/To):
+  - If Yes, Reason to Leave Deloitte:
+  - Any plan for a long leave for next 6 months: (Yes/No/N/A).
+  - Any other Input / Comments / Concerns:
 
 Resume: {{media url=resumeDataUri}}`,
 });
