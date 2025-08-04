@@ -84,8 +84,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 <tbody>
                   {/* Basic Information Header */}
                   <tr>
-                    <td colSpan={4} className="printable-section-header">Basic Information</td>
-                    <td colSpan={2} className="bg-header-peach"></td>
+                    <td colSpan={6} className="printable-section-header">Basic Information</td>
                   </tr>
 
                   {/* Row 1 */}
@@ -153,11 +152,11 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                   </tr>
 
                   <tr>
-                    <td className='font-bold bg-header-peach text-center'>Degree</td>
-                    <td className='font-bold bg-header-peach text-center'>From</td>
-                    <td className='font-bold bg-header-peach text-center'>To</td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Current / Last Employer:</td>
-                    <td><FormInput name="employmentDetails.currentEmployer" control={control}/></td>
+                    <td className='font-bold bg-header-peach text-center w-[16.66%]'>Degree</td>
+                    <td className='font-bold bg-header-peach text-center w-[8.33%]'>From</td>
+                    <td className='font-bold bg-header-peach text-center w-[8.33%]'>To</td>
+                    <td className='font-bold bg-header-peach w-[33.33%]' colSpan={2}>Current / Last Employer:</td>
+                    <td className="w-[33.33%]"><FormInput name="employmentDetails.currentEmployer" control={control}/></td>
                   </tr>
                    <tr>
                     <td><FormInput name="educationDetails.bachelors.degree" control={control}/></td>
