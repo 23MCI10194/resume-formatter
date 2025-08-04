@@ -141,9 +141,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td className="font-bold bg-header-peach">Vendor Name</td>
                         <td><div className='relative'><FormInput name="basicInfo.vendorName" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={1} enabled={isEditMode}/></div></td>
                         <td className="font-bold bg-header-peach">Position Applied</td>
-                        <td><div className='relative'><FormInput name="basicInfo.positionApplied" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isEditMode}/></div></td>
-                        <td className="font-bold bg-header-peach"><div className='relative'>Skill Name<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={4} enabled={isEditMode}/></div></td>
-                        <td><FormInput name="basicInfo.skillName" control={control} /></td>
+                        <td colSpan={3}><div className='relative'><FormInput name="basicInfo.positionApplied" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isEditMode}/></div></td>
                       </tr>
 
                       {/* Row 3 */}
