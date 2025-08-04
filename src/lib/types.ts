@@ -34,6 +34,7 @@ export const ResumeDataSchema = z.object({
     certifications: z.string().default("").describe("Other certifications"),
     awarenessAboutContractRole: YesNoSchema,
     holdingOtherOffers: YesNoSchema,
+    reasonForChange: z.string().default(""),
   }).default({}).describe('Education Details'),
 
   employmentDetails: z.object({
@@ -62,7 +63,6 @@ export const ResumeDataSchema = z.object({
   otherInfo: z.object({
     communicationSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
     listeningSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
-    reasonForChange: z.string().default(""),
     earlierWorkedWithDeloitte: YesNoSchema,
     deloitteFteContract: z.string().default("").describe("If yes, was it FTE or contract?"),
     deloitteEntity: z.string().default("").describe("If yes, which Deloitte entity?"),
@@ -82,3 +82,5 @@ export const ResumeDataSchema = z.object({
 });
 
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
+
+    
