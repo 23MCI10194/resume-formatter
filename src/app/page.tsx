@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { parseResumeData, type ParseResumeDataOutput } from '@/ai/flows/resume-parser';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import ResumeUploader from '@/components/resume-uploader';
 import ResumeForm from '@/components/resume-form';
-import { Loader2, FileText } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Icons } from '@/components/icons';
 
@@ -82,9 +82,9 @@ export default function Home() {
     localStorage.removeItem('resumeFormData');
   };
   
-  const handleLoadFromStorage = (data: ResumeData) => {
+  const handleLoadFromStorage = useCallback((data: ResumeData) => {
     setResumeData(data);
-  }
+  }, []);
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
