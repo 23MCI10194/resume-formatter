@@ -129,57 +129,57 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
 
                       {/* Row 1 */}
                       <tr>
-                        <td className="font-bold bg-header-peach"><div className='relative'>Job Posting ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={0} enabled={isResizing}/></div></td>
+                        <td className="font-bold"><div className='relative'>Job Posting ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={0} enabled={isResizing}/></div></td>
                         <td colSpan={2}><FormInput name="basicInfo.jobPostingId" control={control} /></td>
-                        <td className="font-bold bg-header-peach"><div className='relative'>Job Seeker ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isResizing}/></div></td>
+                        <td className="font-bold"><div className='relative'>Job Seeker ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isResizing}/></div></td>
                         <td colSpan={2}><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
                       </tr>
 
                        {/* Row 2 */}
                       <tr>
-                        <td className="font-bold bg-header-peach">Vendor Name</td>
+                        <td className="font-bold">Vendor Name</td>
                         <td colSpan={2}><div className='relative'><FormInput name="basicInfo.vendorName" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={1} enabled={isResizing}/></div></td>
-                        <td className="font-bold bg-header-peach">Position Applied</td>
+                        <td className="font-bold">Position Applied</td>
                         <td colSpan={2}><div className='relative'><FormInput name="basicInfo.positionApplied" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={4} enabled={isResizing}/></div></td>
                       </tr>
 
                       {/* Row 3 */}
                        <tr>
-                        <td className="font-bold bg-header-peach">Requisition Received Date</td>
+                        <td className="font-bold">Requisition Received Date</td>
                         <td colSpan={2}><FormInput name="basicInfo.requisitionReceivedDate" control={control} /></td>
-                        <td className="font-bold bg-header-peach">Contact No</td>
+                        <td className="font-bold">Contact No</td>
                         <td colSpan={2}><FormInput name="basicInfo.contactNo" control={control} /></td>
                       </tr>
                       
                        {/* Row 4 */}
                        <tr>
-                        <td className="font-bold bg-header-peach">Candidate Name as per PAN</td>
+                        <td className="font-bold">Candidate Name as per PAN</td>
                         <td colSpan={2}><FormInput name="basicInfo.candidateName" control={control} /></td>
-                        <td className="font-bold bg-header-peach">Total Experience</td>
+                        <td className="font-bold">Total Experience</td>
                         <td colSpan={2}><FormInput name="basicInfo.totalExperience" control={control} /></td>
                       </tr>
 
                        {/* Row 5 */}
                        <tr>
-                        <td className="font-bold bg-header-peach">Email</td>
+                        <td className="font-bold">Email</td>
                         <td colSpan={2}><FormInput name="basicInfo.email" control={control} /></td>
-                        <td className="font-bold bg-header-peach">Relevant Experience</td>
+                        <td className="font-bold">Relevant Experience</td>
                         <td colSpan={2}><FormInput name="basicInfo.relevantExperience" control={control} /></td>
                       </tr>
 
                       {/* Row 6 */}
                       <tr>
-                        <td className="font-bold bg-header-peach">Current Location</td>
+                        <td className="font-bold">Current Location</td>
                         <td colSpan={2}><FormInput name="basicInfo.currentLocation" control={control} /></td>
-                        <td className="font-bold bg-header-peach">Relocation (Yes/No)</td>
+                        <td className="font-bold">Relocation (Yes/No)</td>
                         <td colSpan={2}><FormSelect name="basicInfo.relocation" control={control} options={['Yes', 'No', 'N/A']} /></td>
                       </tr>
                       
                       {/* Row 7 */}
                       <tr>
-                        <td className="font-bold bg-header-peach">Preferred Location</td>
+                        <td className="font-bold">Preferred Location</td>
                         <td colSpan={2}><FormInput name="basicInfo.preferredLocation" control={control} /></td>
-                        <td className="font-bold bg-header-peach">Work from office/ Work from Home/Both</td>
+                        <td className="font-bold">Work from office/ Work from Home/Both</td>
                         <td colSpan={2}><FormSelect name="basicInfo.workPreference" control={control} options={['Office', 'Home', 'Both', 'N/A']} /></td>
                       </tr>
                       
@@ -188,7 +188,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={3} className="printable-section-header">Education Details</td>
                         <td colSpan={3} className="printable-section-header">Employment Details</td>
                       </tr>
-                      <tr className='bg-header-peach font-bold'>
+                      <tr className='font-bold'>
                         <td>Degree</td>
                         <td>From</td>
                         <td>To</td>
@@ -234,12 +234,12 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                       <tr>
                         <td colSpan={6} className="printable-section-header">Skills Rating (1-Poor & 5-Excellent)</td>
                       </tr>
-                      <tr className="bg-header-peach">
-                        <td className="font-bold text-center">Top 3 Skills (Relevant/ Others)</td>
-                        <td className="font-bold text-center">No of Projects Handled</td>
-                        <td className="font-bold text-center">Relevant Experience in Skills</td>
-                        <td className="font-bold text-center">Candidate Rating</td>
-                        <td className="font-bold text-center" colSpan={2}>Recruiter Rating</td>
+                      <tr className="font-bold">
+                        <td className="text-center">Top 3 Skills (Relevant/ Others)</td>
+                        <td className="text-center">No of Projects Handled</td>
+                        <td className="text-center">Relevant Experience in Skills</td>
+                        <td className="text-center">Candidate Rating</td>
+                        <td className="text-center" colSpan={2}>Recruiter Rating</td>
                       </tr>
                       {skillFields.map((field, index) => (
                         <tr key={field.id}>
@@ -251,11 +251,11 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         </tr>
                       ))}
                       <tr>
-                        <td className="font-bold bg-header-peach" colSpan={3}>Communication (Poor / Average / Excellent)</td>
+                        <td className="font-bold" colSpan={3}>Communication (Poor / Average / Excellent)</td>
                         <td colSpan={3}><FormSelect name="otherInfo.communicationSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-header-peach" colSpan={3}>Listening Skills (Poor / Average / Excellent)</td>
+                        <td className="font-bold" colSpan={3}>Listening Skills (Poor / Average / Excellent)</td>
                         <td colSpan={3}><FormSelect name="otherInfo.listeningSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
                       </tr>
                       
@@ -264,27 +264,27 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={6} className="printable-section-header">Other Information</td>
                       </tr>
                        <tr>
-                        <td colSpan={2} className="font-bold bg-header-peach">Earlier worked with Deloitte (Yes/No)</td>
+                        <td colSpan={2} className="font-bold">Earlier worked with Deloitte (Yes/No)</td>
                         <td><FormSelect name="otherInfo.earlierWorkedWithDeloitte" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                        <td colSpan={2} className="font-bold bg-header-peach">If Yes, Tenure (From/To)</td>
+                        <td colSpan={2} className="font-bold">If Yes, Tenure (From/To)</td>
                         <td><FormInput name="otherInfo.tenure" control={control}/></td>
                       </tr>
                        <tr>
-                        <td colSpan={2} className="font-bold bg-header-peach">If Yes, Deloitte (FTE/Contract)</td>
+                        <td colSpan={2} className="font-bold">If Yes, Deloitte (FTE/Contract)</td>
                         <td><FormInput name="otherInfo.deloitteFteContract" control={control}/></td>
-                        <td colSpan={2} className="font-bold bg-header-peach">If Yes, Reason to Leave Deloitte</td>
+                        <td colSpan={2} className="font-bold">If Yes, Reason to Leave Deloitte</td>
                         <td><FormInput name="otherInfo.reasonToLeaveDeloitte" control={control}/></td>
                       </tr>
                       <tr>
-                        <td colSpan={2} className="font-bold bg-header-peach">If Yes, Deloitte Entity</td>
+                        <td colSpan={2} className="font-bold">If Yes, Deloitte Entity</td>
                         <td><FormInput name="otherInfo.deloitteEntity" control={control}/></td>
-                        <td colSpan={2} className="font-bold bg-header-peach">Relevant documents for further process</td>
+                        <td colSpan={2} className="font-bold">Relevant documents for further process</td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td colSpan={2} className="font-bold bg-header-peach">Any plan for a long leave for next 6 months</td>
+                        <td colSpan={2} className="font-bold">Any plan for a long leave for next 6 months</td>
                         <td><FormSelect name="otherInfo.longLeavePlan" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                        <td colSpan={2} className="font-bold bg-header-peach">Any other Input / Comments / Concerns:</td>
+                        <td colSpan={2} className="font-bold">Any other Input / Comments / Concerns:</td>
                         <td><FormInput name="otherInfo.otherInput" control={control}/></td>
                       </tr>
 
@@ -293,15 +293,15 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={6} className="printable-section-header">Recruiter Details</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-header-peach" colSpan={2}>Deloitte Recruiter</td>
+                        <td className="font-bold" colSpan={2}>Deloitte Recruiter</td>
                         <td><FormInput name="recruiterDetails.deloitteRecruiter" control={control}/></td>
-                        <td className="font-bold bg-header-peach" colSpan={2}>Vendor Recruiter Name</td>
+                        <td className="font-bold" colSpan={2}>Vendor Recruiter Name</td>
                         <td><FormInput name="recruiterDetails.vendorRecruiterName" control={control}/></td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-header-peach" colSpan={2}>Deloitte CRM</td>
+                        <td className="font-bold" colSpan={2}>Deloitte CRM</td>
                         <td><FormInput name="recruiterDetails.deloitteCrm" control={control}/></td>
-                        <td className="font-bold bg-header-peach" colSpan={2}>Vendor Coordinator</td>
+                        <td className="font-bold" colSpan={2}>Vendor Coordinator</td>
                         <td><FormInput name="recruiterDetails.vendorCoordinator" control={control}/></td>
                       </tr>
                     </tbody>
@@ -312,5 +312,3 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     </Form>
   );
 }
-
-    
