@@ -155,8 +155,8 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     <td className='font-bold bg-header-peach text-center w-[16.66%]'>Degree</td>
                     <td className='font-bold bg-header-peach text-center w-[8.33%]'>From</td>
                     <td className='font-bold bg-header-peach text-center w-[8.33%]'>To</td>
-                    <td className='font-bold bg-header-peach w-[33.33%]' colSpan={2}>Current / Last Employer:</td>
-                    <td className="w-[33.33%]"><FormInput name="employmentDetails.currentEmployer" control={control}/></td>
+                    <td className='font-bold bg-header-peach' colSpan={2}>Current / Last Employer:</td>
+                    <td><FormInput name="employmentDetails.currentEmployer" control={control}/></td>
                   </tr>
                    <tr>
                     <td><FormInput name="educationDetails.bachelors.degree" control={control}/></td>
