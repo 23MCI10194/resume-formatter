@@ -99,8 +99,8 @@ const resumeParserPrompt = ai.definePrompt({
   - Candidate Name: Full name.
   - Contact No: Phone number.
   - Email: Email address.
-  - Total Experience: Extract the total years of work experience as a number followed by 'years' (e.g., '10 years').
-  - Relevant Experience: Extract the relevant years of work experience for the position as a number followed by 'years' (e.g., '5 years').
+  - Total Experience: Extract the total years of work experience. It MUST be only a number followed by 'years' (e.g., '10 years'). Do NOT include any other text or summary.
+  - Relevant Experience: Extract the relevant years of work experience for the position. It MUST be only a number followed by 'years' (e.g., '5 years'). Do NOT include any other text or summary.
   - Current Location: City, State/Country.
   - Preferred Location: Any mentioned preferred work locations.
   - Relocation: Is the candidate willing to relocate? (Yes/No/N/A).
