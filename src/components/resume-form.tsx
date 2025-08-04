@@ -1,246 +1,46 @@
 'use client';
 
-import { useForm, useFieldArray, Controller, type Control } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Form, FormControl, FormField, FormMessage } from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { Download, RotateCcw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ResumeFormProps {
   initialData: ResumeData;
   onReset: () => void;
 }
 
-interface FormSectionProps {
-    control: Control<ResumeData>;
-}
-
-const FormInput = ({ name, control, label, placeholder }: { name: any, control: any, label: string, placeholder?: string }) => (
-    <FormField
+const FormInput = ({ name, control }: { name: any, control: any }) => (
+    <Controller
         control={control}
         name={name}
         render={({ field }) => (
-            <div className="flex items-center">
-                <label className="w-1/3 font-semibold pr-4 text-sm">{label}</label>
-                <div className="w-2/3">
-                    <Input {...field} value={field.value || ''} placeholder={placeholder} className="h-8 text-sm printable-input" />
-                    <FormMessage />
-                </div>
-            </div>
+            <Input {...field} value={field.value || ''} className="h-full w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input" />
         )}
     />
 );
 
-const FormSelect = ({ name, control, label, options }: { name: any, control: any, label: string, options: string[] }) => (
-    <FormField
+const FormSelect = ({ name, control, options }: { name: any, control: any, options: string[] }) => (
+    <Controller
         control={control}
         name={name}
         render={({ field }) => (
-             <div className="flex items-center">
-                <label className="w-1/3 font-semibold pr-4 text-sm">{label}</label>
-                <div className="w-2/3">
-                    <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                            <SelectTrigger className="h-8 text-sm printable-input">
-                                <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            {options.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                </div>
-            </div>
+            <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="h-full w-full bg-transparent border-none rounded-none focus:ring-0 focus:ring-offset-0 focus:shadow-none text-sm printable-input">
+                    <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                    {options.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                </SelectContent>
+            </Select>
         )}
     />
-);
-
-const BasicInfoSection: React.FC<FormSectionProps> = ({ control }) => (
-    <>
-        <h2 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Basic Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-            <div className="bg-white p-1 space-y-1">
-                <FormInput name="basicInfo.jobPostingId" control={control} label="Job Posting ID" />
-                <FormInput name="basicInfo.vendorName" control={control} label="Vendor Name" />
-                <FormInput name="basicInfo.requisitionReceivedDate" control={control} label="Requisition Received Date" />
-                <FormInput name="basicInfo.candidateName" control={control} label="Candidate Name as Per PAN" />
-                <FormInput name="basicInfo.email" control={control} label="Email" />
-                <FormInput name="basicInfo.currentLocation" control={control} label="Current Location" />
-                <FormInput name="basicInfo.preferredLocation" control={control} label="Preferred Location" />
-            </div>
-            <div className="bg-white p-1 space-y-1">
-                <FormInput name="basicInfo.jobSeekerId" control={control} label="Job Seeker ID" />
-                <FormInput name="basicInfo.positionApplied" control={control} label="Position Applied" />
-                <FormInput name="basicInfo.contactNo" control={control} label="Contact No" />
-                <FormInput name="basicInfo.totalExperience" control={control} label="Total Experience" />
-                <FormInput name="basicInfo.relevantExperience" control={control} label="Relevant Experience" />
-                <FormSelect name="basicInfo.relocation" control={control} label="Relocation (Yes/No)" options={['Yes', 'No', 'N/A']} />
-                <FormSelect name="basicInfo.workPreference" control={control} label="Work from office/ Work from Home/Both" options={['Office', 'Home', 'Both', 'N/A']} />
-            </div>
-        </div>
-    </>
-);
-
-const EducationEmploymentSection: React.FC<FormSectionProps> = ({ control }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-        {/* Education Details */}
-        <div className="bg-white">
-            <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Education Details</h3>
-            <div className="p-1">
-                <table className="w-full">
-                    <thead>
-                        <tr className="border-b border-black">
-                            <th className="font-semibold text-sm w-1/3 text-left p-1">Degree</th>
-                            <th className="font-semibold text-sm w-1/3 text-left p-1">From</th>
-                            <th className="font-semibold text-sm w-1/3 text-left p-1">To</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><FormField control={control} name="educationDetails.bachelors.degree" render={({field}) => <Input {...field} value={field.value || ''} placeholder="Bachelor's" className="h-8 text-sm printable-input" />} /></td>
-                            <td><FormField control={control} name="educationDetails.bachelors.from" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                            <td><FormField control={control} name="educationDetails.bachelors.to" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                        </tr>
-                        <tr>
-                            <td><FormField control={control} name="educationDetails.masters.degree" render={({field}) => <Input {...field} value={field.value || ''} placeholder="Master's" className="h-8 text-sm printable-input" />} /></td>
-                            <td><FormField control={control} name="educationDetails.masters.from" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                            <td><FormField control={control} name="educationDetails.masters.to" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div className="flex items-center mt-1">
-                    <label className="font-semibold pr-4 text-sm w-1/3">Others (Any Certifications):</label>
-                    <FormField control={control} name="educationDetails.certifications" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-2/3" />} />
-                </div>
-            </div>
-        </div>
-         {/* Employment Details */}
-        <div className="bg-white">
-            <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Employment Details</h3>
-            <div className="p-1 space-y-1">
-                <div className="flex items-center">
-                    <label className="w-1/2 font-semibold pr-4 text-sm">Current / Last Employer:</label>
-                    <FormField control={control} name="employmentDetails.currentEmployer" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/2" />} />
-                </div>
-                 <div className="flex items-center">
-                    <label className="w-1/2 font-semibold pr-4 text-sm">Role FTE/ Contract with Current or Last Employer</label>
-                    <FormField control={control} name="employmentDetails.employmentType" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/2" />} />
-                </div>
-                <div className="flex items-center">
-                    <label className="w-1/4 font-semibold pr-4 text-sm">From</label>
-                    <FormField control={control} name="employmentDetails.from" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/4" />} />
-                    <label className="w-1/4 font-semibold px-4 text-sm">To</label>
-                    <FormField control={control} name="employmentDetails.to" render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input w-1/4" />} />
-                </div>
-                 <FormSelect name="employmentDetails.overseasExperience" control={control} label="Overseas Experience If Any (Yes/No)" options={['Yes', 'No', 'N/A']} />
-                 <FormInput name="employmentDetails.noticePeriod" control={control} label="Notice period as per company policy / Serving notice period" />
-                 <FormInput name="employmentDetails.benchMarketProfile" control={control} label="Bench/ Market Profile" />
-                 <FormSelect name="employmentDetails.shifts" control={control} label="Shifts (Yes/No)" options={['Yes', 'No', 'N/A']} />
-            </div>
-        </div>
-    </div>
-);
-
-const SkillsSection: React.FC<FormSectionProps> = ({ control }) => {
-    const { fields: skillFields } = useFieldArray({ control, name: "skillsRating" });
-    
-    return (
-        <>
-            <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Skills Rating (1-Poor & 5-Excellent)</h3>
-            <div className="bg-white p-1">
-                <table className="w-full">
-                    <thead>
-                       <tr className="border-b border-black">
-                            <th className="font-semibold text-sm w-1/4 text-left p-1">Top 3 Skills (Relevant/ Others)</th>
-                            <th className="font-semibold text-sm w-1/5 text-left p-1">No of Projects Handled</th>
-                            <th className="font-semibold text-sm w-1/5 text-left p-1">Relevant Experience in Skills</th>
-                            <th className="font-semibold text-sm w-1/5 text-left p-1">Candidate Rating</th>
-                            <th className="font-semibold text-sm w-1/5 text-left p-1">Recruiter Rating</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {skillFields.map((field, index) => (
-                            <tr key={field.id}>
-                                <td><FormField control={control} name={`skillsRating.${index}.skill`} render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                                <td><FormField control={control} name={`skillsRating.${index}.projectsHandled`} render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                                <td><FormField control={control} name={`skillsRating.${index}.relevantExperience`} render={({field}) => <Input {...field} value={field.value || ''} className="h-8 text-sm printable-input" />} /></td>
-                                <td><FormField control={control} name={`skillsRating.${index}.candidateRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} value={field.value || 1} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
-                                <td><FormField control={control} name={`skillsRating.${index}.recruiterRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} value={field.value || 1} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </>
-    );
-};
-
-const OtherInfoSection: React.FC<FormSectionProps> = ({ control }) => (
-    <>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-             <div className="bg-white p-1 space-y-1">
-                <FormSelect name="otherInfo.awarenessAboutContractRole" control={control} label="Awareness about Contract Role (Yes/No)" options={['Yes', 'No', 'N/A']} />
-             </div>
-             <div className="bg-white p-1 space-y-1">
-                 <FormSelect name="otherInfo.holdingOtherOffers" control={control} label="Holding any other offers (Yes/No)" options={['Yes', 'No', 'N/A']} />
-             </div>
-        </div>
-         <div className="grid grid-cols-1 gap-px bg-black">
-            <div className="bg-white p-1">
-                 <FormInput name="otherInfo.reasonForChange" control={control} label="Reason for Change" />
-            </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-             <div className="bg-white p-1">
-                <FormSelect name="otherInfo.communicationSkills" control={control} label="Communication (Poor / Average / Excellent)" options={['Poor', 'Average', 'Excellent', 'N/A']} />
-             </div>
-             <div className="bg-white p-1">
-                 <FormSelect name="otherInfo.listeningSkills" control={control} label="Listening Skills (Poor / Average / Excellent)" options={['Poor', 'Average', 'Excellent', 'N/A']} />
-             </div>
-        </div>
-        <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Other Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-            <div className="bg-white p-1 space-y-1">
-                <FormInput name="otherInfo.earlierWorkedWithDeloitte" control={control} label="Earlier worked with Deloitte (Yes/No)" />
-                <FormInput name="otherInfo.deloitteFteContract" control={control} label="If Yes, Deloitte (FTE/Contract)" />
-                <FormInput name="otherInfo.deloitteEntity" control={control} label="If Yes, Deloitte Entity" />
-            </div>
-             <div className="bg-white p-1 space-y-1">
-                <FormInput name="otherInfo.tenure" control={control} label="If Yes, Tenure (From/To)" />
-                <FormInput name="otherInfo.reasonToLeaveDeloitte" control={control} label="If Yes, Reason to Leave Deloitte" />
-                <label className="text-sm">Relevant documents for further process</label>
-            </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-             <div className="bg-white p-1">
-                <FormInput name="otherInfo.longLeavePlan" control={control} label="Any plan for a long leave for next 6 months" />
-             </div>
-             <div className="bg-white p-1">
-                 <FormInput name="otherInfo.otherInput" control={control} label="Any other Input / Comments / Concerns:" />
-             </div>
-        </div>
-    </>
-);
-
-const RecruiterDetailsSection: React.FC<FormSectionProps> = ({ control }) => (
-    <>
-        <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Recruiter Details</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black">
-            <div className="bg-white p-1 space-y-1">
-                <FormInput name="recruiterDetails.deloitteRecruiter" control={control} label="Deloitte Recruiter" />
-                <FormInput name="recruiterDetails.deloitteCrm" control={control} label="Deloitte CRM" />
-            </div>
-            <div className="bg-white p-1 space-y-1">
-                <FormInput name="recruiterDetails.vendorRecruiterName" control={control} label="Vendor Recruiter Name" />
-                <FormInput name="recruiterDetails.vendorCoordinator" control={control} label="Vendor Coordinator" />
-            </div>
-        </div>
-    </>
 );
 
 
@@ -249,26 +49,27 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     resolver: zodResolver(ResumeDataSchema),
     defaultValues: initialData,
   });
+  
+  const { control, watch } = form;
+
+  const { fields: skillFields } = useFieldArray({ control, name: "skillsRating" });
 
   useEffect(() => {
     form.reset(initialData);
   }, [initialData, form.reset]);
 
+  const watchedValues = watch();
   useEffect(() => {
-    const subscription = form.watch((value) => {
-      localStorage.setItem('resumeFormData', JSON.stringify(value));
-    });
-    return () => subscription.unsubscribe();
-  }, [form.watch]);
+    localStorage.setItem('resumeFormData', JSON.stringify(watchedValues));
+  }, [watchedValues]);
   
   const handlePrint = () => {
-    localStorage.setItem('resumeFormData', JSON.stringify(form.getValues()));
     window.print();
   }
 
   return (
     <Form {...form}>
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-4 bg-white p-4 rounded-lg shadow-lg">
+        <div className="space-y-4 bg-white p-4 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row gap-2 no-print">
                 <Button type="button" onClick={handlePrint}>
                   <Download className="mr-2 h-4 w-4" /> Download as PDF
@@ -278,14 +79,223 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                 </Button>
             </div>
 
-            <div className="border border-black printable-card">
-                <BasicInfoSection control={form.control} />
-                <EducationEmploymentSection control={form.control} />
-                <OtherInfoSection control={form.control} />
-                <SkillsSection control={form.control} />
-                <RecruiterDetailsSection control={form.control} />
+            <div className="printable-card">
+              <table className="w-full border-collapse border-2 border-black printable-table">
+                <tbody>
+                  {/* Basic Information Header */}
+                  <tr>
+                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Basic Information</td>
+                  </tr>
+
+                  {/* Row 1 */}
+                  <tr>
+                    <td className="font-bold w-1/5">Job Posting ID</td>
+                    <td className="w-2/5"><FormInput name="basicInfo.jobPostingId" control={control} /></td>
+                    <td className="font-bold w-1/5">Job Seeker ID</td>
+                    <td className="w-2/5"><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
+                  </tr>
+
+                   {/* Row 2 */}
+                  <tr>
+                    <td className="font-bold">Vendor Name</td>
+                    <td><FormInput name="basicInfo.vendorName" control={control} /></td>
+                    <td className="font-bold">Position Applied</td>
+                    <td><FormInput name="basicInfo.positionApplied" control={control} /></td>
+                  </tr>
+
+                  {/* Row 3 */}
+                   <tr>
+                    <td className="font-bold">Requisition Received Date</td>
+                    <td><FormInput name="basicInfo.requisitionReceivedDate" control={control} /></td>
+                    <td className="font-bold">Contact No</td>
+                    <td><FormInput name="basicInfo.contactNo" control={control} /></td>
+                  </tr>
+                  
+                   {/* Row 4 */}
+                   <tr>
+                    <td className="font-bold">Candidate NameasPer PAN</td>
+                    <td><FormInput name="basicInfo.candidateName" control={control} /></td>
+                    <td className="font-bold">Total Experience</td>
+                    <td><FormInput name="basicInfo.totalExperience" control={control} /></td>
+                  </tr>
+
+                   {/* Row 5 */}
+                   <tr>
+                    <td className="font-bold">Email</td>
+                    <td><FormInput name="basicInfo.email" control={control} /></td>
+                    <td className="font-bold">Relevant Experience</td>
+                    <td><FormInput name="basicInfo.relevantExperience" control={control} /></td>
+                  </tr>
+
+                  {/* Row 6 */}
+                  <tr>
+                    <td className="font-bold">Current Location</td>
+                    <td><FormInput name="basicInfo.currentLocation" control={control} /></td>
+                    <td className="font-bold">Relocation (Yes/No)</td>
+                    <td><FormSelect name="basicInfo.relocation" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                  </tr>
+                  
+                  {/* Row 7 */}
+                  <tr>
+                    <td className="font-bold">Preferred Location</td>
+                    <td><FormInput name="basicInfo.preferredLocation" control={control} /></td>
+                    <td className="font-bold">Work from office/ Work from Home/Both</td>
+                    <td><FormSelect name="basicInfo.workPreference" control={control} options={['Office', 'Home', 'Both', 'N/A']} /></td>
+                  </tr>
+                  
+                  {/* Education / Employment Header */}
+                  <tr>
+                    <td colSpan={3} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Education Details</td>
+                    <td colSpan={1} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Employment Details</td>
+                  </tr>
+
+                  {/* Education / Employment Content */}
+                  <tr>
+                    <td colSpan={3}>
+                      <table className="w-full border-collapse">
+                        <tbody>
+                          <tr>
+                            <td className="font-bold border-r border-black w-1/3">Degree</td>
+                            <td className="font-bold border-r border-black w-1/3">From</td>
+                            <td className="font-bold w-1/3">To</td>
+                          </tr>
+                          <tr>
+                            <td className="border-r border-black"><FormInput name="educationDetails.bachelors.degree" control={control}/></td>
+                            <td className="border-r border-black"><FormInput name="educationDetails.bachelors.from" control={control}/></td>
+                            <td><FormInput name="educationDetails.bachelors.to" control={control}/></td>
+                          </tr>
+                          <tr>
+                            <td className="border-r border-black"><FormInput name="educationDetails.masters.degree" control={control}/></td>
+                            <td className="border-r border-black"><FormInput name="educationDetails.masters.from" control={control}/></td>
+                            <td><FormInput name="educationDetails.masters.to" control={control}/></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td colSpan={1}>
+                       <table className="w-full border-collapse">
+                        <tbody>
+                          <tr>
+                            <td className="font-bold border-r border-black w-1/2">From</td>
+                            <td className="font-bold w-1/2">To</td>
+                          </tr>
+                          <tr>
+                            <td className="border-r border-black"><FormInput name="employmentDetails.from" control={control}/></td>
+                            <td><FormInput name="employmentDetails.to" control={control}/></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Others (Any Certifications):</td>
+                    <td colSpan={2}><FormInput name="educationDetails.certifications" control={control}/></td>
+                    <td className="font-bold">Current / Last Employer: <FormInput name="employmentDetails.currentEmployer" control={control}/></td>
+                  </tr>
+                   <tr>
+                    <td className="font-bold">Awareness about Contract Role (Yes/No)</td>
+                    <td colSpan={2}><FormSelect name="otherInfo.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td className="font-bold">Role FTE/ Contract with Current or Last Employer: <FormInput name="employmentDetails.employmentType" control={control}/></td>
+                  </tr>
+                   <tr>
+                    <td className="font-bold">Holding any other offers (Yes/No)</td>
+                    <td colSpan={2}><FormSelect name="otherInfo.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td className="font-bold">Overseas Experience If Any (Yes/No): <FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                  </tr>
+                   <tr>
+                    <td className="font-bold">Reason for Change</td>
+                    <td colSpan={2}><FormInput name="otherInfo.reasonForChange" control={control}/></td>
+                    <td className="font-bold">Notice period as per company policy / Serving notice period: <FormInput name="employmentDetails.noticePeriod" control={control}/></td>
+                  </tr>
+                   <tr>
+                    <td colSpan={3}></td>
+                    <td className="font-bold">Bench/ Market Profile: <FormInput name="employmentDetails.benchMarketProfile" control={control}/></td>
+                  </tr>
+                  <tr>
+                    <td colSpan={3}></td>
+                    <td className="font-bold">Shifts (Yes/No): <FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                  </tr>
+
+                   {/* Skills Header */}
+                  <tr>
+                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Skills Rating (1-Poor & 5-Excellent)</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold text-center">Top 3 Skills (Relevant/ Others)</td>
+                    <td className="font-bold text-center">No of Projects Handled</td>
+                    <td className="font-bold text-center">Relevant Experience in Skills</td>
+                    <td className="font-bold text-center">Candidate Rating</td>
+                  </tr>
+                  {skillFields.map((field, index) => (
+                    <tr key={field.id}>
+                        <td><FormInput name={`skillsRating.${index}.skill`} control={control} /></td>
+                        <td><FormInput name={`skillsRating.${index}.projectsHandled`} control={control} /></td>
+                        <td><FormInput name={`skillsRating.${index}.relevantExperience`} control={control} /></td>
+                        <td><FormInput name={`skillsRating.${index}.candidateRating`} control={control} /></td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td colSpan={4}><FormInput name={`skillsRating.3.recruiterRating`} control={control} /></td>
+                  </tr>
+
+                  {/* Other Info */}
+                  <tr>
+                      <td className="font-bold">Communication (Poor / Average / Excellent)</td>
+                      <td><FormSelect name="otherInfo.communicationSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
+                      <td className="font-bold">Listening Skills (Poor / Average / Excellent)-</td>
+                      <td><FormSelect name="otherInfo.listeningSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
+                  </tr>
+                  <tr>
+                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Other Information</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Earlier worked with Deloitte (Yes/No)</td>
+                    <td><FormSelect name="otherInfo.earlierWorkedWithDeloitte" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td colSpan={2}><FormInput name="otherInfo.deloitteFteContract" control={control}/></td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}></td>
+                    <td className="font-bold">If Yes, Tenure (From/To)</td>
+                    <td><FormInput name="otherInfo.tenure" control={control}/></td>
+                  </tr>
+                   <tr>
+                    <td colSpan={2}></td>
+                    <td className="font-bold">If Yes, Reason to Leave Deloitte</td>
+                    <td><FormInput name="otherInfo.reasonToLeaveDeloitte" control={control}/></td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">If Yes, Deloitte Entity</td>
+                    <td><FormInput name="otherInfo.deloitteEntity" control={control}/></td>
+                    <td className="font-bold">Relevant documents for further process</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Any plan for a long leave for next 6 months</td>
+                    <td><FormSelect name="otherInfo.longLeavePlan" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td className="font-bold">Any other Input / Comments / Concerns:</td>
+                    <td><FormInput name="otherInfo.otherInput" control={control}/></td>
+                  </tr>
+
+                   {/* Recruiter Details */}
+                  <tr>
+                    <td colSpan={4} className="printable-section-header bg-header-peach text-black font-bold p-1 text-center text-base">Recruiter Details</td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Deloitte Recruiter</td>
+                    <td><FormInput name="recruiterDetails.deloitteRecruiter" control={control}/></td>
+                    <td className="font-bold">Vendor Recruiter Name</td>
+                    <td><FormInput name="recruiterDetails.vendorRecruiterName" control={control}/></td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">Deloitte CRM</td>
+                    <td><FormInput name="recruiterDetails.deloitteCrm" control={control}/></td>
+                    <td className="font-bold">Vendor Coordinator</td>
+                    <td><FormInput name="recruiterDetails.vendorCoordinator" control={control}/></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-        </form>
+        </div>
     </Form>
   );
 }
