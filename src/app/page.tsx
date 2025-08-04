@@ -101,8 +101,8 @@ export default function Home() {
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
       <div className="w-full max-w-6xl mx-auto">
         <header className="flex items-center gap-4 mb-8 no-print">
-          <div className="bg-primary text-primary-foreground p-1 rounded-lg">
-            <Icons.logo className="w-10 h-10" />
+          <div className="bg-primary text-primary-foreground p-2 rounded-lg">
+            <Icons.logo className="w-8 h-8" />
           </div>
           <div>
             <h1 className="text-3xl font-bold font-headline text-primary">Resume Formatter</h1>
