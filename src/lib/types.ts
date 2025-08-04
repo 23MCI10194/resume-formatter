@@ -1,60 +1,86 @@
 import { z } from "zod";
 
-export const ResumeDataSchema = z.object({
-  personalDetails: z.object({
-    fullName: z.string().default("").describe('The full name of the candidate.'),
-    contactDetails: z.object({
-      phone: z.string().default("").describe('The phone number of the candidate.'),
-      email: z.string().default("").describe('The email address of the candidate.'),
-    }).default({}).describe('The contact details of the candidate.'),
-  }).default({}).describe('The personal details of the candidate.'),
+const YesNoSchema = z.enum(['Yes', 'No', 'N/A']).default('N/A');
 
-  experience: z.object({
-    totalExperience: z.string().default("").describe('The total years of experience of the candidate.'),
-    relevantExperience: z.string().default("").describe('The relevant years of experience of the candidate.'),
-  }).default({}).describe('The experience of the candidate.'),
+export const ResumeDataSchema = z.object({
+  basicInfo: z.object({
+    jobPostingId: z.string().default("").describe("Job Posting ID"),
+    jobSeekerId: z.string().default("").describe("Job Seeker ID"),
+    vendorName: z.string().default("").describe("Vendor Name"),
+    positionApplied: z.string().default("").describe("Position Applied"),
+    requisitionReceivedDate: z.string().default("").describe("Requisition Received Date"),
+    contactNo: z.string().default("").describe("Contact Number"),
+    skillName: z.string().default("").describe("Primary Skill Name"),
+    candidateName: z.string().default("").describe("Candidate Name as per PAN"),
+    totalExperience: z.string().default("").describe("Total Experience"),
+    email: z.string().default("").describe("Email"),
+    relevantExperience: z.string().default("").describe("Relevant Experience"),
+    currentLocation: z.string().default("").describe("Current Location"),
+    relocation: YesNoSchema.describe("Relocation preference"),
+    preferredLocation: z.string().default("").describe("Preferred Location"),
+    workPreference: z.enum(['Office', 'Home', 'Both', 'N/A']).default('N/A').describe("Work from office/home preference"),
+  }).default({}).describe('Basic Information'),
   
-  education: z.array(z.object({
-    degree: z.string().default("").describe('The degree obtained.'),
-    major: z.string().default("").describe('The major of the degree.'),
-    university: z.string().default("").describe('The university where the degree was obtained.'),
-    graduationDate: z.string().default("").describe('The graduation date.'),
-  })).default([]).describe('The education history of the candidate.'),
+  educationDetails: z.object({
+    bachelors: z.object({
+      degree: z.string().default("").describe("Bachelor's Degree"),
+      from: z.string().default("").describe("From Date"),
+      to: z.string().default("").describe("To Date"),
+    }).default({}),
+    masters: z.object({
+      degree: z.string().default("").describe("Master's Degree"),
+      from: z.string().default("").describe("From Date"),
+      to: z.string().default("").describe("To Date"),
+    }).default({}),
+    certifications: z.string().default("").describe("Other certifications"),
+  }).default({}).describe('Education Details'),
+
+  employmentDetails: z.object({
+    currentEmployer: z.string().default("").describe("Current/Last Employer"),
+    employmentType: z.string().default("").describe("Role FTE/Contract with Current or Last Employer"),
+    from: z.string().default("").describe("From Date"),
+    to: z.string().default("").describe("To Date"),
+    overseasExperience: YesNoSchema.describe("Overseas Experience"),
+    noticePeriod: z.string().default("").describe("Notice Period"),
+    benchMarketProfile: z.string().default("").describe("Bench/Market Profile"),
+    shifts: YesNoSchema.describe("Willingness to work in shifts"),
+  }).default({}).describe('Employment Details'),
   
-  skills: z.array(z.object({
-    skillName: z.string().default("").describe('The name of the skill.'),
-    rating: z.number().min(1).max(5).default(3).describe('The rating of the skill (out of 5).'),
-  })).default([]).describe('The skills of the candidate.'),
+  skillsRating: z.array(z.object({
+    skill: z.string().default("").describe("Skill Name"),
+    projectsHandled: z.string().default("").describe("Number of Projects Handled"),
+    relevantExperience: z.string().default("").describe("Relevant Experience in Skill"),
+    candidateRating: z.number().min(1).max(5).default(1).describe("Candidate's self-rating"),
+    recruiterRating: z.number().min(1).max(5).default(1).describe("Recruiter's rating"),
+  })).default(Array(3).fill(undefined).map(() => ({
+      skill: "",
+      projectsHandled: "",
+      relevantExperience: "",
+      candidateRating: 1,
+      recruiterRating: 1,
+  }))).describe('Skills Rating'),
   
-  location: z.object({
-    currentLocation: z.string().default("").describe('The current location of the candidate.'),
-    preferredLocation: z.string().default("").describe('The preferred location of the candidate.'),
-  }).default({}).describe('The location preferences of the candidate.'),
-  
-  employmentHistory: z.array(z.object({
-    company: z.string().default("").describe('The name of the company.'),
-    role: z.string().default("").describe('The role of the candidate.'),
-    startDate: z.string().default("").describe('The start date of the employment.'),
-    endDate: z.string().default("").describe('The end date of the employment.'),
-  })).default([]).describe('The employment history of the candidate.'),
-  
-  additionalDetails: z.object({
-    noticePeriod: z.string().default("").describe('The notice period of the candidate.'),
-    currentOffer: z.string().default("").describe('The current offer of the candidate.'),
-    reasonForChange: z.string().default("").describe('The reason for change of the candidate.'),
-  }).default({}).describe('The additional details of the candidate.'),
-  
-  deloitteSpecific: z.object({
-    isAuthorized: z.enum(['yes', 'no', 'na']).default('na'),
-    previouslyEmployed: z.enum(['yes', 'no', 'na']).default('na'),
-    needsSponsorship: z.enum(['yes', 'no', 'na']).default('na'),
-  }).default({}).describe('The company-specific questions.'),
+  otherInfo: z.object({
+    awarenessAboutContractRole: YesNoSchema,
+    holdingOtherOffers: YesNoSchema,
+    reasonForChange: z.string().default(""),
+    communicationSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
+    listeningSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
+    earlierWorkedWithDeloitte: YesNoSchema,
+    deloitteFteContract: z.string().default("No"),
+    deloitteEntity: z.string().default("No"),
+    tenure: z.string().default("").describe("If yes, tenure (From/To)"),
+    reasonToLeaveDeloitte: z.string().default("").describe("If yes, reason to leave Deloitte"),
+    longLeavePlan: YesNoSchema.describe("Any plan for a long leave for next 6 months"),
+    otherInput: z.string().default("").describe("Any other Input / Comments / Concerns"),
+  }).default({}).describe('Other Information'),
   
   recruiterDetails: z.object({
-    name: z.string().default(""),
-    email: z.string().default(""),
-    submissionDate: z.string().default(""),
-  }).default({}).describe('The recruiter details.'),
+    deloitteRecruiter: z.string().default(""),
+    vendorRecruiterName: z.string().default(""),
+    deloitteCrm: z.string().default(""),
+    vendorCoordinator: z.string().default(""),
+  }).default({}).describe('Recruiter Details'),
 });
 
 export type ResumeData = z.infer<typeof ResumeDataSchema>;

@@ -19,7 +19,7 @@ export default function Home() {
       const savedData = localStorage.getItem('resumeFormData');
       if (savedData) {
         const parsedData = ResumeDataSchema.parse(JSON.parse(savedData));
-        if (parsedData && parsedData.personalDetails.fullName) {
+        if (parsedData && parsedData.basicInfo.candidateName) {
           setResumeData(parsedData);
         }
       }
@@ -40,13 +40,35 @@ export default function Home() {
       try {
         const result: ParseResumeDataOutput = await parseResumeData({ resumeDataUri: dataUri });
         
+        const currentData = resumeData ? {...resumeData} : ResumeDataSchema.parse({});
+
         const fullData: ResumeData = {
-          ...ResumeDataSchema.parse({}), // Get all defaults
-          ...result,
-          recruiterDetails: {
-            ...ResumeDataSchema.shape.recruiterDetails.parse({}),
-            submissionDate: new Date().toISOString().split('T')[0],
+          ...currentData,
+          basicInfo: {
+            ...currentData.basicInfo,
+            ...result.basicInfo,
           },
+          educationDetails: {
+            ...currentData.educationDetails,
+            ...result.educationDetails,
+          },
+          employmentDetails: {
+            ...currentData.employmentDetails,
+            ...result.employmentDetails
+          },
+          skillsRating: currentData.skillsRating.map((skill, index) => ({
+            ...skill,
+            skill: result.skillsRating[index]?.skill || '',
+            candidateRating: result.skillsRating[index]?.candidateRating || 1,
+          })),
+          otherInfo: {
+            ...currentData.otherInfo,
+            ...result.otherInfo,
+          },
+          recruiterDetails: {
+            ...currentData.recruiterDetails,
+            deloitteRecruiter: "HR Name", // Placeholder
+          }
         };
 
         setResumeData(fullData);
@@ -88,8 +110,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
-      <div className="w-full max-w-4xl mx-auto">
-        <header className="flex items-center gap-4 mb-8">
+      <div className="w-full max-w-6xl mx-auto">
+        <header className="flex items-center gap-4 mb-8 no-print">
           <div className="bg-primary text-primary-foreground p-3 rounded-lg">
             <Icons.logo className="w-8 h-8" />
           </div>

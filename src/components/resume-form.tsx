@@ -2,16 +2,14 @@
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Trash2, PlusCircle, Download, RotateCcw, User, Briefcase, GraduationCap, Star, MapPin, FileQuestion, UserCheck, ScrollText } from 'lucide-react';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Download, RotateCcw } from 'lucide-react';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -19,35 +17,71 @@ interface ResumeFormProps {
   onLoadFromStorage: (data: ResumeData) => void;
 }
 
+const FormInput = ({ name, control, label, placeholder }: { name: any, control: any, label: string, placeholder?: string }) => (
+    <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+            <div className="flex items-center">
+                <label className="w-1/3 font-semibold pr-4 text-sm">{label}</label>
+                <div className="w-2/3">
+                    <Input {...field} placeholder={placeholder} className="h-8 text-sm printable-input" />
+                    <FormMessage />
+                </div>
+            </div>
+        )}
+    />
+);
+
+const FormSelect = ({ name, control, label, options }: { name: any, control: any, label: string, options: string[] }) => (
+    <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+             <div className="flex items-center">
+                <label className="w-1/3 font-semibold pr-4 text-sm">{label}</label>
+                <div className="w-2/3">
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                            <SelectTrigger className="h-8 text-sm printable-input">
+                                <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            {options.map(option => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </div>
+            </div>
+        )}
+    />
+);
+
 export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: ResumeFormProps) {
   const form = useForm<ResumeData>({
     resolver: zodResolver(ResumeDataSchema),
     defaultValues: initialData,
   });
 
-  const { fields: skillFields, append: appendSkill, remove: removeSkill } = useFieldArray({
+   const { fields: skillFields } = useFieldArray({
     control: form.control,
-    name: 'skills',
+    name: "skillsRating",
   });
 
-  const { fields: educationFields, append: appendEducation, remove: removeEducation } = useFieldArray({
-    control: form.control,
-    name: 'education',
-  });
+  const handleLoad = useCallback((data: ResumeData) => {
+    onLoadFromStorage(data);
+  }, [onLoadFromStorage]);
 
-  const { fields: employmentFields, append: appendEmployment, remove: removeEmployment } = useFieldArray({
-    control: form.control,
-    name: 'employmentHistory',
-  });
 
   useEffect(() => {
     try {
         const savedData = localStorage.getItem('resumeFormData');
         if (savedData) {
             const parsedData = ResumeDataSchema.parse(JSON.parse(savedData));
-             if (parsedData && parsedData.personalDetails.fullName) {
+             if (parsedData && parsedData.basicInfo.candidateName) {
                 form.reset(parsedData);
-                onLoadFromStorage(parsedData);
+                handleLoad(parsedData);
                 return;
             }
         }
@@ -56,7 +90,7 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
       form.reset(initialData);
     }
     form.reset(initialData);
-  }, [form, initialData, onLoadFromStorage]);
+  }, [form, initialData, handleLoad]);
 
   useEffect(() => {
     const subscription = form.watch((value) => {
@@ -73,146 +107,193 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
     console.log('Form submitted for printing:', data);
     handlePrint();
   }
-
+  
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="flex flex-col sm:flex-row gap-2 no-print">
-            <Button type="submit">
-              <Download className="mr-2 h-4 w-4" /> Download as PDF
-            </Button>
-            <Button type="button" variant="outline" onClick={onReset}>
-              <RotateCcw className="mr-2 h-4 w-4" /> Start Over
-            </Button>
-        </div>
-        
-        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6', 'item-7']} className="w-full">
-            
-            <AccordionItem value="item-1">
-              <AccordionTrigger><div className="flex items-center"><User className="mr-2" /> Basic Information</div></AccordionTrigger>
-              <AccordionContent>
-                <Card className="printable-card">
-                  <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField control={form.control} name="personalDetails.fullName" render={({ field }) => ( <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                    <FormField control={form.control} name="personalDetails.contactDetails.email" render={({ field }) => ( <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="john.doe@example.com" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                    <FormField control={form.control} name="personalDetails.contactDetails.phone" render={({ field }) => ( <FormItem><FormLabel>Phone</FormLabel><FormControl><Input placeholder="+1 123-456-7890" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
-            
-            <AccordionItem value="item-2">
-              <AccordionTrigger><div className="flex items-center"><Star className="mr-2" /> Skills</div></AccordionTrigger>
-              <AccordionContent>
-                <Card className="printable-card">
-                  <CardContent className="pt-6 space-y-4">
-                    {skillFields.map((field, index) => (
-                      <div key={field.id} className="flex gap-2 items-end p-3 rounded-md border">
-                        <FormField control={form.control} name={`skills.${index}.skillName`} render={({ field }) => ( <FormItem className="flex-grow"><FormLabel>Skill</FormLabel><FormControl><Input placeholder="e.g. React" {...field} /></FormControl></FormItem> )} />
-                        <FormField control={form.control} name={`skills.${index}.rating`} render={({ field }) => ( <FormItem><FormLabel>Rating (1-5)</FormLabel><Select onValueChange={(value) => field.onChange(Number(value))} value={String(field.value)}><FormControl><SelectTrigger><SelectValue placeholder="Rate" /></SelectTrigger></FormControl><SelectContent><SelectItem value="1">1</SelectItem><SelectItem value="2">2</SelectItem><SelectItem value="3">3</SelectItem><SelectItem value="4">4</SelectItem><SelectItem value="5">5</SelectItem></SelectContent></Select></FormItem> )} />
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeSkill(index)} className="no-print"><Trash2 className="text-destructive" /></Button>
-                      </div>
-                    ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => appendSkill({ skillName: '', rating: 3 })} className="no-print"><PlusCircle className="mr-2 h-4 w-4" /> Add Skill</Button>
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
-            
-            <AccordionItem value="item-3">
-              <AccordionTrigger><div className="flex items-center"><GraduationCap className="mr-2" /> Education</div></AccordionTrigger>
-              <AccordionContent>
-                <Card className="printable-card">
-                  <CardContent className="pt-6 space-y-4">
-                    {educationFields.map((field, index) => (
-                      <div key={field.id} className="space-y-2 p-3 rounded-md border">
-                        <div className="flex justify-between items-center mb-2">
-                          <h4 className="font-semibold">Education #{index + 1}</h4>
-                          <Button type="button" variant="ghost" size="icon" onClick={() => removeEducation(index)} className="no-print"><Trash2 className="text-destructive" /></Button>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField control={form.control} name={`education.${index}.degree`} render={({ field }) => ( <FormItem><FormLabel>Degree</FormLabel><FormControl><Input placeholder="e.g. Bachelor of Science" {...field} /></FormControl></FormItem> )} />
-                            <FormField control={form.control} name={`education.${index}.major`} render={({ field }) => ( <FormItem><FormLabel>Major</FormLabel><FormControl><Input placeholder="e.g. Computer Science" {...field} /></FormControl></FormItem> )} />
-                            <FormField control={form.control} name={`education.${index}.university`} render={({ field }) => ( <FormItem><FormLabel>University</FormLabel><FormControl><Input placeholder="e.g. State University" {...field} /></FormControl></FormItem> )} />
-                            <FormField control={form.control} name={`education.${index}.graduationDate`} render={({ field }) => ( <FormItem><FormLabel>Graduation Date</FormLabel><FormControl><Input placeholder="e.g. May 2020" {...field} /></FormControl></FormItem> )} />
-                        </div>
-                      </div>
-                    ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => appendEducation({ degree: '', major: '', university: '', graduationDate: '' })} className="no-print"><PlusCircle className="mr-2 h-4 w-4" /> Add Education</Button>
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 bg-white p-4 rounded-lg shadow-lg">
+            <div className="flex flex-col sm:flex-row gap-2 no-print">
+                <Button type="submit">
+                  <Download className="mr-2 h-4 w-4" /> Download as PDF
+                </Button>
+                <Button type="button" variant="outline" onClick={onReset}>
+                  <RotateCcw className="mr-2 h-4 w-4" /> Start Over
+                </Button>
+            </div>
 
-            <AccordionItem value="item-4">
-              <AccordionTrigger><div className="flex items-center"><Briefcase className="mr-2" /> Work History</div></AccordionTrigger>
-              <AccordionContent>
-                <Card className="printable-card">
-                   <CardContent className="pt-6 space-y-4">
-                     {employmentFields.map((field, index) => (
-                        <div key={field.id} className="space-y-2 p-3 rounded-md border">
-                          <div className="flex justify-between items-center mb-2">
-                            <h4 className="font-semibold">Experience #{index + 1}</h4>
-                            <Button type="button" variant="ghost" size="icon" onClick={() => removeEmployment(index)} className="no-print"><Trash2 className="text-destructive" /></Button>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField control={form.control} name={`employmentHistory.${index}.company`} render={({ field }) => ( <FormItem><FormLabel>Company</FormLabel><FormControl><Input placeholder="e.g. Tech Corp" {...field} /></FormControl></FormItem> )} />
-                            <FormField control={form.control} name={`employmentHistory.${index}.role`} render={({ field }) => ( <FormItem><FormLabel>Role</FormLabel><FormControl><Input placeholder="e.g. Software Engineer" {...field} /></FormControl></FormItem> )} />
-                            <FormField control={form.control} name={`employmentHistory.${index}.startDate`} render={({ field }) => ( <FormItem><FormLabel>Start Date</FormLabel><FormControl><Input placeholder="e.g. June 2020" {...field} /></FormControl></FormItem> )} />
-                            <FormField control={form.control} name={`employmentHistory.${index}.endDate`} render={({ field }) => ( <FormItem><FormLabel>End Date</FormLabel><FormControl><Input placeholder="e.g. Present" {...field} /></FormControl></FormItem> )} />
-                          </div>
+            <div className="border border-black">
+                {/* Basic Information */}
+                <h2 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Basic Information</h2>
+                <div className="grid grid-cols-2 gap-px bg-black">
+                    <div className="bg-white p-1 space-y-1">
+                        <FormInput name="basicInfo.jobPostingId" control={form.control} label="Job Posting ID" />
+                        <FormInput name="basicInfo.vendorName" control={form.control} label="Vendor Name" />
+                        <FormInput name="basicInfo.requisitionReceivedDate" control={form.control} label="Requisition Received Date" />
+                        <FormInput name="basicInfo.candidateName" control={form.control} label="Candidate NameasPer PAN" />
+                        <FormInput name="basicInfo.email" control={form.control} label="Email" />
+                        <FormInput name="basicInfo.currentLocation" control={form.control} label="Current Location" />
+                        <FormInput name="basicInfo.preferredLocation" control={form.control} label="Preferred Location" />
+                    </div>
+                    <div className="bg-white p-1 space-y-1">
+                        <FormInput name="basicInfo.jobSeekerId" control={form.control} label="Job Seeker ID" />
+                        <FormInput name="basicInfo.positionApplied" control={form.control} label="Position Applied" />
+                        <FormInput name="basicInfo.contactNo" control={form.control} label="Contact No" />
+                        <FormInput name="basicInfo.totalExperience" control={form.control} label="Total Experience" />
+                        <FormInput name="basicInfo.relevantExperience" control={form.control} label="Relevant Experience" />
+                        <FormSelect name="basicInfo.relocation" control={form.control} label="Relocation (Yes/No)" options={['Yes', 'No', 'N/A']} />
+                        <FormSelect name="basicInfo.workPreference" control={form.control} label="Work from office/ Work from Home/Both" options={['Office', 'Home', 'Both', 'N/A']} />
+                    </div>
+                </div>
+
+                {/* Education & Employment */}
+                <div className="grid grid-cols-2 gap-px bg-black">
+                    {/* Education Details */}
+                    <div className="bg-white">
+                        <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Education Details</h3>
+                        <div className="p-1">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-black">
+                                        <th className="font-semibold text-sm w-1/3 text-left p-1">Degree</th>
+                                        <th className="font-semibold text-sm w-1/3 text-left p-1">From</th>
+                                        <th className="font-semibold text-sm w-1/3 text-left p-1">To</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><FormField control={form.control} name="educationDetails.bachelors.degree" render={({field}) => <Input {...field} placeholder="Bachelor's" className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.bachelors.from" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.bachelors.to" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><FormField control={form.control} name="educationDetails.masters.degree" render={({field}) => <Input {...field} placeholder="Master's" className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.masters.from" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                        <td><FormField control={form.control} name="educationDetails.masters.to" render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div className="flex items-center mt-1">
+                                <label className="font-semibold pr-4 text-sm w-1/3">Others (Any Certifications):</label>
+                                <FormField control={form.control} name="educationDetails.certifications" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-2/3" />} />
+                            </div>
                         </div>
-                      ))}
-                     <Button type="button" variant="outline" size="sm" onClick={() => appendEmployment({ company: '', role: '', startDate: '', endDate: '' })} className="no-print"><PlusCircle className="mr-2 h-4 w-4" /> Add Experience</Button>
-                   </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
-            
-            <AccordionItem value="item-5">
-              <AccordionTrigger><div className="flex items-center"><FileQuestion className="mr-2" /> Additional Details</div></AccordionTrigger>
-              <AccordionContent>
-                <Card className="printable-card">
-                  <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField control={form.control} name="experience.totalExperience" render={({ field }) => ( <FormItem><FormLabel>Total Experience</FormLabel><FormControl><Input placeholder="e.g. 5 years" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="experience.relevantExperience" render={({ field }) => ( <FormItem><FormLabel>Relevant Experience</FormLabel><FormControl><Input placeholder="e.g. 3 years in web dev" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="location.currentLocation" render={({ field }) => ( <FormItem><FormLabel>Current Location</FormLabel><FormControl><Input placeholder="e.g. San Francisco, CA" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="location.preferredLocation" render={({ field }) => ( <FormItem><FormLabel>Preferred Location</FormLabel><FormControl><Input placeholder="e.g. Remote" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="additionalDetails.noticePeriod" render={({ field }) => ( <FormItem><FormLabel>Notice Period</FormLabel><FormControl><Input placeholder="e.g. 2 weeks" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="additionalDetails.currentOffer" render={({ field }) => ( <FormItem><FormLabel>Current Offer</FormLabel><FormControl><Input placeholder="e.g. N/A" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="additionalDetails.reasonForChange" render={({ field }) => ( <FormItem className="md:col-span-2"><FormLabel>Reason for Change</FormLabel><FormControl><Textarea placeholder="Seeking new challenges..." {...field} /></FormControl></FormItem> )} />
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
-            
-            <AccordionItem value="item-6">
-              <AccordionTrigger><div className="flex items-center"><FileQuestion className="mr-2" /> Company Specific Questions</div></AccordionTrigger>
-              <AccordionContent>
-                 <Card className="printable-card">
-                  <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-1 gap-4">
-                    <FormField control={form.control} name="deloitteSpecific.isAuthorized" render={({ field }) => ( <FormItem><FormLabel>Are you legally authorized to work in the country for which you are applying?</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="yes">Yes</SelectItem><SelectItem value="no">No</SelectItem><SelectItem value="na">N/A</SelectItem></SelectContent></Select></FormItem> )} />
-                    <FormField control={form.control} name="deloitteSpecific.previouslyEmployed" render={({ field }) => ( <FormItem><FormLabel>Have you ever been employed by this company before?</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="yes">Yes</SelectItem><SelectItem value="no">No</SelectItem><SelectItem value="na">N/A</SelectItem></SelectContent></Select></FormItem> )} />
-                    <FormField control={form.control} name="deloitteSpecific.needsSponsorship" render={({ field }) => ( <FormItem><FormLabel>Do you require sponsorship for employment visa status?</FormLabel><Select onValueChange={field.onChange} value={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select an option" /></SelectTrigger></FormControl><SelectContent><SelectItem value="yes">Yes</SelectItem><SelectItem value="no">No</SelectItem><SelectItem value="na">N/A</SelectItem></SelectContent></Select></FormItem> )} />
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
-            
-            <AccordionItem value="item-7">
-              <AccordionTrigger><div className="flex items-center"><UserCheck className="mr-2" /> Recruiter Details</div></AccordionTrigger>
-              <AccordionContent>
-                 <Card className="printable-card">
-                  <CardContent className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField control={form.control} name="recruiterDetails.name" render={({ field }) => ( <FormItem><FormLabel>Recruiter Name</FormLabel><FormControl><Input placeholder="Jane Smith" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="recruiterDetails.email" render={({ field }) => ( <FormItem><FormLabel>Recruiter Email</FormLabel><FormControl><Input type="email" placeholder="jane.smith@recruiter.com" {...field} /></FormControl></FormItem> )} />
-                    <FormField control={form.control} name="recruiterDetails.submissionDate" render={({ field }) => ( <FormItem><FormLabel>Submission Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl></FormItem> )} />
-                  </CardContent>
-                </Card>
-              </AccordionContent>
-            </AccordionItem>
-        </Accordion>
-      </form>
+                    </div>
+                     {/* Employment Details */}
+                    <div className="bg-white">
+                        <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Employment Details</h3>
+                        <div className="p-1 space-y-1">
+                            <div className="flex items-center">
+                                <label className="w-1/2 font-semibold pr-4 text-sm">Current / Last Employer:</label>
+                                <FormField control={form.control} name="employmentDetails.currentEmployer" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/2" />} />
+                            </div>
+                             <div className="flex items-center">
+                                <label className="w-1/2 font-semibold pr-4 text-sm">Role FTE/ Contract with Current or Last Employer</label>
+                                <FormField control={form.control} name="employmentDetails.employmentType" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/2" />} />
+                            </div>
+                            <div className="flex items-center">
+                                <label className="w-1/4 font-semibold pr-4 text-sm">From</label>
+                                <FormField control={form.control} name="employmentDetails.from" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/4" />} />
+                                <label className="w-1/4 font-semibold px-4 text-sm">To</label>
+                                <FormField control={form.control} name="employmentDetails.to" render={({field}) => <Input {...field} className="h-8 text-sm printable-input w-1/4" />} />
+                            </div>
+                             <FormSelect name="employmentDetails.overseasExperience" control={form.control} label="Overseas Experience If Any (Yes/No)" options={['Yes', 'No', 'N/A']} />
+                             <FormInput name="employmentDetails.noticePeriod" control={form.control} label="Notice period as per company policy / Serving notice period" />
+                             <FormInput name="employmentDetails.benchMarketProfile" control={form.control} label="Bench/ Market Profile" />
+                             <FormSelect name="employmentDetails.shifts" control={form.control} label="Shifts (Yes/No)" options={['Yes', 'No', 'N/A']} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Other Info Continued */}
+                <div className="grid grid-cols-2 gap-px bg-black">
+                     <div className="bg-white p-1 space-y-1">
+                        <FormSelect name="otherInfo.awarenessAboutContractRole" control={form.control} label="Awareness about Contract Role (Yes/No)" options={['Yes', 'No', 'N/A']} />
+                     </div>
+                     <div className="bg-white p-1 space-y-1">
+                         <FormSelect name="otherInfo.holdingOtherOffers" control={form.control} label="Holding any other offers (Yes/No)" options={['Yes', 'No', 'N/A']} />
+                     </div>
+                </div>
+                 <div className="grid grid-cols-1 gap-px bg-black">
+                    <div className="bg-white p-1">
+                         <FormInput name="otherInfo.reasonForChange" control={form.control} label="Reason for Change" />
+                    </div>
+                </div>
+
+
+                {/* Skills Rating */}
+                <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Skills Rating (1-Poor & 5-Excellent)</h3>
+                <div className="bg-white p-1">
+                    <table className="w-full">
+                        <thead>
+                           <tr className="border-b border-black">
+                                <th className="font-semibold text-sm w-1/4 text-left p-1">Top 3 Skills (Relevant/ Others)</th>
+                                <th className="font-semibold text-sm w-1/5 text-left p-1">No of Projects Handled</th>
+                                <th className="font-semibold text-sm w-1/5 text-left p-1">Relevant Experience in Skills</th>
+                                <th className="font-semibold text-sm w-1/5 text-left p-1">Candidate Rating</th>
+                                <th className="font-semibold text-sm w-1/5 text-left p-1">Recruiter Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {skillFields.map((field, index) => (
+                                <tr key={field.id}>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.skill`} render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.projectsHandled`} render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.relevantExperience`} render={({field}) => <Input {...field} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.candidateRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
+                                    <td><FormField control={form.control} name={`skillsRating.${index}.recruiterRating`} render={({field}) => <Input type="number" min="1" max="5" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="h-8 text-sm printable-input" />} /></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                
+                 <div className="grid grid-cols-2 gap-px bg-black">
+                     <div className="bg-white p-1">
+                        <FormSelect name="otherInfo.communicationSkills" control={form.control} label="Communication (Poor / Average / Excellent)" options={['Poor', 'Average', 'Excellent', 'N/A']} />
+                     </div>
+                     <div className="bg-white p-1">
+                         <FormSelect name="otherInfo.listeningSkills" control={form.control} label="Listening Skills (Poor / Average / Excellent)" options={['Poor', 'Average', 'Excellent', 'N/A']} />
+                     </div>
+                </div>
+
+                {/* Other Information */}
+                <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Other Information</h3>
+                <div className="grid grid-cols-2 gap-px bg-black">
+                    <div className="bg-white p-1 space-y-1">
+                        <FormInput name="otherInfo.earlierWorkedWithDeloitte" control={form.control} label="Earlier worked with Deloitte (Yes/No)" />
+                        <FormInput name="otherInfo.deloitteFteContract" control={form.control} label="If Yes, Deloitte (FTE/Contract)" />
+                        <FormInput name="otherInfo.deloitteEntity" control={form.control} label="If Yes, Deloitte Entity" />
+                    </div>
+                     <div className="bg-white p-1 space-y-1">
+                        <FormInput name="otherInfo.tenure" control={form.control} label="If Yes, Tenure (From/To)" />
+                        <FormInput name="otherInfo.reasonToLeaveDeloitte" control={form.control} label="If Yes, Reason to Leave Deloitte" />
+                        <label className="text-sm">Relevant documents for further process</label>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-px bg-black">
+                     <div className="bg-white p-1">
+                        <FormInput name="otherInfo.longLeavePlan" control={form.control} label="Any plan for a long leave for next 6 months" />
+                     </div>
+                     <div className="bg-white p-1">
+                         <FormInput name="otherInfo.otherInput" control={form.control} label="Any other Input / Comments / Concerns:" />
+                     </div>
+                </div>
+
+
+                {/* Recruiter Details */}
+                <h3 className="bg-yellow-500 text-black font-bold p-1 text-center printable-section-header text-base">Recruiter Details</h3>
+                <div className="grid grid-cols-2 gap-px bg-black">
+                    <div className="bg-white p-1 space-y-1">
+                        <FormInput name="recruiterDetails.deloitteRecruiter" control={form.control} label="Deloitte Recruiter" />
+                        <FormInput name="recruiterDetails.deloitteCrm" control={form.control} label="Deloitte CRM" />
+                    </div>
+                    <div className="bg-white p-1 space-y-1">
+                        <FormInput name="recruiterDetails.vendorRecruiterName" control={form.control} label="Vendor Recruiter Name" />
+                        <FormInput name="recruiterDetails.vendorCoordinator" control={form.control} label="Vendor Coordinator" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
     </Form>
   );
 }

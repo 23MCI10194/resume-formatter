@@ -19,44 +19,53 @@ const ParseResumeDataInputSchema = z.object({
 });
 export type ParseResumeDataInput = z.infer<typeof ParseResumeDataInputSchema>;
 
+const YesNoSchema = z.enum(['Yes', 'No', 'N/A']).describe("Yes, No, or Not Applicable");
+
 const ParseResumeDataOutputSchema = z.object({
-  personalDetails: z.object({
-    fullName: z.string().describe('The full name of the candidate.'),
-    contactDetails: z.object({
-      phone: z.string().describe('The phone number of the candidate.'),
-      email: z.string().describe('The email address of the candidate.'),
-    }).describe('The contact details of the candidate.'),
-  }).describe('The personal details of the candidate.'),
-  experience: z.object({
-    totalExperience: z.string().describe('The total years of experience of the candidate.'),
-    relevantExperience: z.string().describe('The relevant years of experience of the candidate.'),
-  }).describe('The experience of the candidate.'),
-  education: z.array(z.object({
-    degree: z.string().describe('The degree obtained.'),
-    major: z.string().describe('The major of the degree.'),
-    university: z.string().describe('The university where the degree was obtained.'),
-    graduationDate: z.string().describe('The graduation date.'),
-  })).describe('The education history of the candidate.'),
-  skills: z.array(z.object({
-    skillName: z.string().describe('The name of the skill.'),
-    rating: z.number().min(1).max(5).describe('The rating of the skill (out of 5). A value of 0 is not allowed and will be rounded up to 1.'),
-  })).describe('The skills of the candidate.'),
-  location: z.object({
-    currentLocation: z.string().describe('The current location of the candidate.'),
-    preferredLocation: z.string().describe('The preferred location of the candidate.'),
-  }).describe('The location preferences of the candidate.'),
-  employmentHistory: z.array(z.object({
-    company: z.string().describe('The name of the company.'),
-    role: z.string().describe('The role of the candidate.'),
-    startDate: z.string().describe('The start date of the employment.'),
-    endDate: z.string().describe('The end date of the employment.'),
-  })).describe('The employment history of the candidate.'),
-  additionalDetails: z.object({
-    noticePeriod: z.string().describe('The notice period of the candidate.'),
-    currentOffer: z.string().describe('The current offer of the candidate.'),
-    reasonForChange: z.string().describe('The reason for change of the candidate.'),
-  }).describe('The additional details of the candidate.'),
+    basicInfo: z.object({
+        positionApplied: z.string().describe("The position the candidate is applying for."),
+        candidateName: z.string().describe("The full name of the candidate."),
+        contactNo: z.string().describe("The phone number of the candidate."),
+        email: z.string().describe("The email address of the candidate."),
+        totalExperience: z.string().describe("The total years of work experience."),
+        relevantExperience: z.string().describe("The relevant years of work experience for the position."),
+        currentLocation: z.string().describe("The current city and state of the candidate."),
+        preferredLocation: z.string().describe("The preferred work location."),
+        relocation: YesNoSchema.describe("Whether the candidate is open to relocation."),
+    }).describe('Basic Information section'),
+
+    educationDetails: z.object({
+        bachelors: z.object({
+          degree: z.string().describe("Bachelor's Degree name and major."),
+          from: z.string().describe("Start date of Bachelor's degree."),
+          to: z.string().describe("End date or graduation date of Bachelor's degree."),
+        }),
+        masters: z.object({
+          degree: z.string().describe("Master's Degree name and major, if any."),
+          from: z.string().describe("Start date of Master's degree."),
+          to: z.string().describe("End date or graduation date of Master's degree."),
+        }),
+        certifications: z.string().describe("Any other relevant certifications mentioned."),
+    }).describe('Education Details section'),
+
+    employmentDetails: z.object({
+        currentEmployer: z.string().describe("The name of the current or most recent employer."),
+        employmentType: z.string().describe("The type of role (e.g., Full-Time, Contract)."),
+        from: z.string().describe("Start date of the most recent employment."),
+        to: z.string().describe("End date of the most recent employment (or 'Present')."),
+        noticePeriod: z.string().describe("The notice period required for leaving the current job."),
+    }).describe('Employment Details section'),
+
+    skillsRating: z.array(z.object({
+        skill: z.string().describe("A key skill possessed by the candidate."),
+        candidateRating: z.number().min(1).max(5).describe("Candidate's proficiency in this skill, rated 1 (Poor) to 5 (Excellent). Infer this from the resume."),
+    })).min(3).max(3).describe("A list of the top 3 most relevant skills from the resume."),
+
+    otherInfo: z.object({
+        reasonForChange: z.string().describe("The candidate's reason for seeking a new job, if mentioned."),
+    }).describe('Other Information section'),
 });
+
 export type ParseResumeDataOutput = z.infer<typeof ParseResumeDataOutputSchema>;
 
 export async function parseResumeData(input: ParseResumeDataInput): Promise<ParseResumeDataOutput> {
@@ -67,17 +76,35 @@ const resumeParserPrompt = ai.definePrompt({
   name: 'resumeParserPrompt',
   input: {schema: ParseResumeDataInputSchema},
   output: {schema: ParseResumeDataOutputSchema},
-  prompt: `You are an expert resume parser that extracts information from resumes.
+  prompt: `You are an expert resume parser for a recruitment agency. You will be given a resume as a data URI. Extract the following information from the resume and respond in JSON format. Be precise and only extract information that is explicitly available in the resume. If a value is not available, provide a sensible default or an empty string.
 
-You will be given a resume as a data URI. Extract the following information from the resume and respond in JSON format:
+- **Basic Information**:
+  - Position Applied: The job title the candidate is targeting.
+  - Candidate Name: Full name.
+  - Contact No: Phone number.
+  - Email: Email address.
+  - Total Experience: Summarize total years of professional experience.
+  - Relevant Experience: Summarize years of experience relevant to the target role.
+  - Current Location: City, State/Country.
+  - Preferred Location: Any mentioned preferred work locations.
+  - Relocation: Is the candidate willing to relocate? (Yes/No/N/A).
 
-- Personal Details (full name, contact details (phone, email))
-- Experience (total experience, relevant experience)
-- Education (degree, major, university, graduation date)
-- Skills (skill name, rating (out of 5, where 1 is the minimum))
-- Location (current location, preferred location)
-- Employment History (company, role, start date, end date)
-- Additional Details (notice period, current offer, reason for change)
+- **Education Details**:
+  - Bachelors: Degree, start date, and end date.
+  - Masters: Degree, start date, and end date (if applicable).
+  - Certifications: List any other certifications.
+
+- **Employment Details**:
+  - Current/Last Employer: Name of the company.
+  - Employment Type: e.g., Full-Time, Contract.
+  - From/To Dates: Employment duration for the latest role.
+  - Notice Period: If mentioned.
+
+- **Skills Rating**:
+  - Identify the top 3 skills from the resume. For each skill, provide a rating from 1 to 5 based on your interpretation of their proficiency from the projects and experience described. 1 is poor, 5 is excellent.
+
+- **Other Information**:
+  - Reason for Change: Any stated reason for looking for a new job.
 
 Resume: {{media url=resumeDataUri}}`,
 });
@@ -90,10 +117,10 @@ const parseResumeDataFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await resumeParserPrompt(input);
-    if (output) {
-      output.skills = output.skills.map(skill => ({
+     if (output) {
+      output.skillsRating = output.skillsRating.map(skill => ({
         ...skill,
-        rating: Math.max(1, skill.rating),
+        candidateRating: Math.max(1, skill.candidateRating || 1),
       }));
     }
     return output!;

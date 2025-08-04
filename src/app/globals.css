@@ -96,14 +96,21 @@ body {
     page-break-inside: avoid;
     border: 1px solid #e0e0e0 !important;
   }
-  input, textarea, select {
-    border: 1px solid #e0e0e0 !important;
+  input, textarea, select, .printable-input {
+    border: 1px solid #ccc !important;
+    background-color: #f9f9f9 !important;
+    -webkit-print-color-adjust: exact;
   }
   h1, h2, h3, h4, p {
     color: black !important;
   }
+  .printable-section-header {
+    background-color: #f2a223 !important;
+    -webkit-print-color-adjust: exact;
+    color: black !important;
+  }
   @page {
     size: A4;
-    margin: 1.5cm;
+    margin: 0.5cm;
   }
 }
