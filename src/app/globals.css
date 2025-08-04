@@ -83,7 +83,7 @@ body {
     color: black !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    font-size: 10px;
+    font-size: 9px;
   }
   .no-print {
     display: none !important;
@@ -96,8 +96,7 @@ body {
     background-color: white !important;
   }
   .printable-card {
-    border: 2px solid black !important;
-    border-radius: 0 !important;
+    border: none !important;
     box-shadow: none !important;
     background-color: white !important;
     padding: 0 !important;
@@ -110,7 +109,9 @@ body {
     border-radius: 0 !important;
     padding: 2px 4px !important;
     height: auto !important;
-    font-size: 10px !important;
+    font-size: 9px !important;
+    box-shadow: none !important;
+    outline: none !important;
   }
 
   .printable-table {
@@ -132,11 +133,11 @@ body {
     text-align: center !important;
     font-weight: bold !important;
     padding: 4px !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
   }
   
   .bg-header-peach {
-     background-color: #f5cba7 !important; /* Lighter Orange */
+     background-color: #fdebd0 !important; /* Lighter peach */
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       font-weight: bold;
