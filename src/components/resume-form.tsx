@@ -152,54 +152,49 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                   </tr>
 
                   <tr>
-                    <td className='font-bold bg-header-peach text-center w-[16.66%]'>Degree</td>
-                    <td className='font-bold bg-header-peach text-center w-[8.33%]'>From</td>
-                    <td className='font-bold bg-header-peach text-center w-[8.33%]'>To</td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Current / Last Employer:</td>
-                    <td><FormInput name="employmentDetails.currentEmployer" control={control}/></td>
+                    <td className='font-bold bg-header-peach text-center'>Degree</td>
+                    <td className='font-bold bg-header-peach text-center'>From</td>
+                    <td className='font-bold bg-header-peach text-center'>To</td>
+                    <td className='font-bold bg-header-peach text-center'>Employment Details</td>
+                    <td className='font-bold bg-header-peach text-center'>From</td>
+                    <td className='font-bold bg-header-peach text-center'>To</td>
                   </tr>
-                   <tr>
-                    <td><FormInput name="educationDetails.bachelors.degree" control={control}/></td>
+                  <tr>
+                    <td>Bachelor's: <FormInput name="educationDetails.bachelors.degree" control={control}/></td>
                     <td><FormInput name="educationDetails.bachelors.from" control={control}/></td>
                     <td><FormInput name="educationDetails.bachelors.to" control={control}/></td>
-                    <td colSpan={2} className='font-bold bg-header-peach'>Role FTE/ Contract with Current or Last Employer</td>
-                    <td><FormInput name="employmentDetails.employmentType" control={control}/></td>
+                    <td rowSpan={2}>Current / Last Employer:<FormInput name="employmentDetails.currentEmployer" control={control}/></td>
+                    <td rowSpan={2}><FormInput name="employmentDetails.from" control={control}/></td>
+                    <td rowSpan={2}><FormInput name="employmentDetails.to" control={control}/></td>
                   </tr>
                   <tr>
-                    <td><FormInput name="educationDetails.masters.degree" control={control}/></td>
+                    <td>Master's: <FormInput name="educationDetails.masters.degree" control={control}/></td>
                     <td><FormInput name="educationDetails.masters.from" control={control}/></td>
                     <td><FormInput name="educationDetails.masters.to" control={control}/></td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Employment Details From</td>
-                    <td><FormInput name="employmentDetails.from" control={control}/></td>
-                  </tr>
-                   <tr>
-                    <td className='font-bold bg-header-peach'>Others (Any Certifications):</td>
-                    <td colSpan={2}><FormInput name="educationDetails.certifications" control={control}/></td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Employment Details To</td>
-                    <td><FormInput name="employmentDetails.to" control={control}/></td>
-                  </tr>
-                   <tr>
-                    <td className='font-bold bg-header-peach'>Awareness about Contract Role (Yes/No)</td>
-                    <td colSpan={2}><FormSelect name="otherInfo.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Overseas Experience If Any (Yes/No)</td>
-                    <td><FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                  </tr>
-                   <tr>
-                    <td className='font-bold bg-header-peach'>Holding any other offers (Yes/No)</td>
-                    <td colSpan={2}><FormSelect name="otherInfo.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Notice period as per company policy / Serving notice period</td>
-                    <td><FormInput name="employmentDetails.noticePeriod" control={control}/></td>
                   </tr>
                   <tr>
-                    <td className='font-bold bg-header-peach'>Reason for Change</td>
-                    <td colSpan={2}><FormInput name="otherInfo.reasonForChange" control={control}/></td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Bench/ Market Profile</td>
-                    <td><FormInput name="employmentDetails.benchMarketProfile" control={control}/></td>
+                     <td>Others (Any Certifications):</td>
+                     <td colSpan={2}><FormInput name="educationDetails.certifications" control={control}/></td>
+                     <td colSpan={3} >Role FTE/ Contract with Current or Last Employer: <FormInput name="employmentDetails.employmentType" control={control}/></td>
                   </tr>
-                   <tr>
+                  <tr>
+                    <td>Awareness about Contract Role (Yes/No)</td>
+                    <td colSpan={2}><FormSelect name="educationDetails.awarenessAboutContractRole" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td colSpan={3}>Overseas Experience If Any (Yes/No): <FormSelect name="employmentDetails.overseasExperience" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                  </tr>
+                  <tr>
+                     <td>Holding any other offers (Yes/No)</td>
+                     <td colSpan={2}><FormSelect name="educationDetails.holdingOtherOffers" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                     <td colSpan={3}>Notice period as per company policy / Serving notice period: <FormInput name="employmentDetails.noticePeriod" control={control}/></td>
+                  </tr>
+                  <tr>
+                    <td>Reason for Change</td>
+                    <td colSpan={2}><FormInput name="educationDetails.reasonForChange" control={control}/></td>
+                    <td colSpan={3}>Bench/ Market Profile: <FormInput name="employmentDetails.benchMarketProfile" control={control}/></td>
+                  </tr>
+                  <tr>
                     <td colSpan={3}></td>
-                    <td className='font-bold bg-header-peach' colSpan={2}>Shifts (Yes/No)</td>
-                    <td><FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td colSpan={3}>Shifts (Yes/No): <FormSelect name="employmentDetails.shifts" control={control} options={['Yes', 'No', 'N/A']} /></td>
                   </tr>
 
                    {/* Skills Header */}

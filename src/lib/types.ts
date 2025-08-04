@@ -33,13 +33,16 @@ export const ResumeDataSchema = z.object({
       to: z.string().default("").describe("To Date"),
     }).default({}),
     certifications: z.string().default("").describe("Other certifications"),
+    awarenessAboutContractRole: YesNoSchema,
+    holdingOtherOffers: YesNoSchema,
+    reasonForChange: z.string().default(""),
   }).default({}).describe('Education Details'),
 
   employmentDetails: z.object({
     currentEmployer: z.string().default("").describe("Current/Last Employer"),
-    employmentType: z.string().default("").describe("Role FTE/Contract with Current or Last Employer"),
     from: z.string().default("").describe("From Date"),
     to: z.string().default("").describe("To Date"),
+    employmentType: z.string().default("").describe("Role FTE/Contract with Current or Last Employer"),
     overseasExperience: YesNoSchema.describe("Overseas Experience"),
     noticePeriod: z.string().default("").describe("Notice Period"),
     benchMarketProfile: z.string().default("").describe("Bench/Market Profile"),
@@ -59,9 +62,6 @@ export const ResumeDataSchema = z.object({
   }))).describe('Skills Rating'),
   
   otherInfo: z.object({
-    awarenessAboutContractRole: YesNoSchema,
-    holdingOtherOffers: YesNoSchema,
-    reasonForChange: z.string().default(""),
     communicationSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
     listeningSkills: z.enum(['Poor', 'Average', 'Excellent', 'N/A']).default('N/A'),
     earlierWorkedWithDeloitte: YesNoSchema,
