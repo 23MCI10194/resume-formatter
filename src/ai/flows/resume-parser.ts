@@ -27,6 +27,7 @@ const ParseResumeDataOutputSchema = z.object({
       email: z.string().describe('The email address of the candidate.'),
     }).describe('The contact details of the candidate.'),
   }).describe('The personal details of the candidate.'),
+  overview: z.string().describe('A professional summary of the candidate.'),
   experience: z.object({
     totalExperience: z.string().describe('The total years of experience of the candidate.'),
     relevantExperience: z.string().describe('The relevant years of experience of the candidate.'),
@@ -72,6 +73,7 @@ const resumeParserPrompt = ai.definePrompt({
 You will be given a resume as a data URI. Extract the following information from the resume and respond in JSON format:
 
 - Personal Details (full name, contact details (phone, email))
+- Overview (A professional summary of the candidate)
 - Experience (total experience, relevant experience)
 - Education (degree, major, university, graduation date)
 - Skills (skill name, rating (out of 5, where 1 is the minimum))

@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Trash2, PlusCircle, Download, RotateCcw, User, Briefcase, GraduationCap, Star, MapPin, FileQuestion, UserCheck } from 'lucide-react';
+import { Trash2, PlusCircle, Download, RotateCcw, User, Briefcase, GraduationCap, Star, MapPin, FileQuestion, UserCheck, ScrollText } from 'lucide-react';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -69,19 +69,23 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
     window.print();
   }
 
+  const onSubmit = (data: ResumeData) => {
+    handlePrint();
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handlePrint)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-2 no-print">
             <Button type="submit">
-              <Download /> Download as PDF
+              <Download className="mr-2" /> Download as PDF
             </Button>
             <Button type="button" variant="outline" onClick={onReset}>
-              <RotateCcw /> Start Over
+              <RotateCcw className="mr-2" /> Start Over
             </Button>
         </div>
         
-        <Accordion type="multiple" defaultValue={['item-1', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6', 'item-7']} className="w-full">
+        <Accordion type="multiple" defaultValue={['item-1', 'item-overview', 'item-2', 'item-3', 'item-4', 'item-5', 'item-6', 'item-7']} className="w-full">
             
             <AccordionItem value="item-1">
               <AccordionTrigger><User className="mr-2" /> Basic Information</AccordionTrigger>
@@ -96,6 +100,17 @@ export default function ResumeForm({ initialData, onReset, onLoadFromStorage }: 
               </AccordionContent>
             </AccordionItem>
 
+            <AccordionItem value="item-overview">
+              <AccordionTrigger><ScrollText className="mr-2" /> Overview</AccordionTrigger>
+              <AccordionContent>
+                <Card className="printable-card">
+                  <CardContent className="pt-6">
+                    <FormField control={form.control} name="overview" render={({ field }) => ( <FormItem><FormLabel>Professional Summary</FormLabel><FormControl><Textarea placeholder="A brief summary of the candidate's professional background..." {...field} rows={5} /></FormControl><FormMessage /></FormItem> )} />
+                  </CardContent>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
+            
             <AccordionItem value="item-2">
               <AccordionTrigger><Star className="mr-2" /> Skills</AccordionTrigger>
               <AccordionContent>

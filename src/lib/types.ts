@@ -7,12 +7,14 @@ export const ResumeDataSchema = z.object({
       phone: z.string().default("").describe('The phone number of the candidate.'),
       email: z.string().default("").describe('The email address of the candidate.'),
     }).default({}).describe('The contact details of the candidate.'),
-  }).default({}).describe('The personal details of the candidate.'),
+  }).default({}),
   
+  overview: z.string().default("").describe('A professional summary of the candidate.'),
+
   experience: z.object({
     totalExperience: z.string().default("").describe('The total years of experience of the candidate.'),
     relevantExperience: z.string().default("").describe('The relevant years of experience of the candidate.'),
-  }).default({}).describe('The experience of the candidate.'),
+  }).default({}),
   
   education: z.array(z.object({
     degree: z.string().default("").describe('The degree obtained.'),
@@ -29,7 +31,7 @@ export const ResumeDataSchema = z.object({
   location: z.object({
     currentLocation: z.string().default("").describe('The current location of the candidate.'),
     preferredLocation: z.string().default("").describe('The preferred location of the candidate.'),
-  }).default({}).describe('The location preferences of the candidate.'),
+  }).default({}),
   
   employmentHistory: z.array(z.object({
     company: z.string().default("").describe('The name of the company.'),
@@ -42,7 +44,7 @@ export const ResumeDataSchema = z.object({
     noticePeriod: z.string().default("").describe('The notice period of the candidate.'),
     currentOffer: z.string().default("").describe('The current offer of the candidate.'),
     reasonForChange: z.string().default("").describe('The reason for change of the candidate.'),
-  }).default({}).describe('The additional details of the candidate.'),
+  }).default({}),
   
   deloitteSpecific: z.object({
     isAuthorized: z.enum(['yes', 'no', 'na']).default('na'),
