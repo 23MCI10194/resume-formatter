@@ -77,6 +77,10 @@ body {
   }
 }
 
+.edit-mode .printable-table td {
+  border: 1px dashed hsl(var(--primary) / 0.5) !important;
+}
+
 @media print {
   @page {
     size: A4;
