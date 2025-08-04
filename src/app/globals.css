@@ -121,23 +121,24 @@ body {
   
   .printable-table td, .printable-table th {
     border: 1px solid black;
-    padding: 2px 4px;
+    padding: 4px;
     vertical-align: middle;
+    height: 28px;
   }
 
   .printable-section-header {
-    background-color: #f8c471 !important; /* Light Orange */
+    background-color: #A67C52 !important; 
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    color: black !important;
+    color: white !important;
     text-align: center !important;
     font-weight: bold !important;
-    padding: 4px !important;
-    font-size: 10px !important;
+    padding: 6px !important;
+    font-size: 11px !important;
   }
   
   .bg-header-peach {
-     background-color: #fdebd0 !important; /* Lighter peach */
+     background-color: #F8C471 !important; /* Lighter peach */
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       font-weight: bold;
@@ -152,3 +153,4 @@ body {
     margin: 1cm;
   }
 }
+

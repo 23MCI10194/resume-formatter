@@ -88,59 +88,59 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
 
                   {/* Row 1 */}
                   <tr>
-                    <td className="font-bold bg-header-peach w-[15%]">Job Posting ID</td>
-                    <td className="w-[35%]" colSpan={2}><FormInput name="basicInfo.jobPostingId" control={control} /></td>
-                    <td className="font-bold bg-header-peach w-[15%]">Job Seeker ID</td>
-                    <td className="w-[35%]" colSpan={2}><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
+                    <td className="font-bold bg-header-peach w-[20%]">Job Posting ID</td>
+                    <td className="w-[30%]"><FormInput name="basicInfo.jobPostingId" control={control} /></td>
+                    <td className="font-bold bg-header-peach w-[20%]">Job Seeker ID</td>
+                    <td className="w-[30%]" colSpan={3}><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
                   </tr>
 
                    {/* Row 2 */}
                   <tr>
                     <td className="font-bold bg-header-peach">Vendor Name</td>
-                    <td colSpan={2}><FormInput name="basicInfo.vendorName" control={control} /></td>
+                    <td><FormInput name="basicInfo.vendorName" control={control} /></td>
                     <td className="font-bold bg-header-peach">Position Applied</td>
-                    <td><FormInput name="basicInfo.positionApplied" control={control} /></td>
+                    <td colSpan={2}><FormInput name="basicInfo.positionApplied" control={control} /></td>
                     <td className='bg-header-peach font-bold'>Skill Name <FormInput name="basicInfo.skillName" control={control}/></td>
                   </tr>
 
                   {/* Row 3 */}
                    <tr>
                     <td className="font-bold bg-header-peach">Requisition Received Date</td>
-                    <td colSpan={2}><FormInput name="basicInfo.requisitionReceivedDate" control={control} /></td>
+                    <td><FormInput name="basicInfo.requisitionReceivedDate" control={control} /></td>
                     <td className="font-bold bg-header-peach">Contact No</td>
-                    <td colSpan={2}><FormInput name="basicInfo.contactNo" control={control} /></td>
+                    <td colSpan={3}><FormInput name="basicInfo.contactNo" control={control} /></td>
                   </tr>
                   
                    {/* Row 4 */}
                    <tr>
                     <td className="font-bold bg-header-peach">Candidate Name as per PAN</td>
-                    <td colSpan={2}><FormInput name="basicInfo.candidateName" control={control} /></td>
+                    <td><FormInput name="basicInfo.candidateName" control={control} /></td>
                     <td className="font-bold bg-header-peach">Total Experience</td>
-                    <td colSpan={2}><FormInput name="basicInfo.totalExperience" control={control} /></td>
+                    <td colSpan={3}><FormInput name="basicInfo.totalExperience" control={control} /></td>
                   </tr>
 
                    {/* Row 5 */}
                    <tr>
                     <td className="font-bold bg-header-peach">Email</td>
-                    <td colSpan={2}><FormInput name="basicInfo.email" control={control} /></td>
+                    <td><FormInput name="basicInfo.email" control={control} /></td>
                     <td className="font-bold bg-header-peach">Relevant Experience</td>
-                    <td colSpan={2}><FormInput name="basicInfo.relevantExperience" control={control} /></td>
+                    <td colSpan={3}><FormInput name="basicInfo.relevantExperience" control={control} /></td>
                   </tr>
 
                   {/* Row 6 */}
                   <tr>
                     <td className="font-bold bg-header-peach">Current Location</td>
-                    <td colSpan={2}><FormInput name="basicInfo.currentLocation" control={control} /></td>
+                    <td><FormInput name="basicInfo.currentLocation" control={control} /></td>
                     <td className="font-bold bg-header-peach">Relocation (Yes/No)</td>
-                    <td colSpan={2}><FormSelect name="basicInfo.relocation" control={control} options={['Yes', 'No', 'N/A']} /></td>
+                    <td colSpan={3}><FormSelect name="basicInfo.relocation" control={control} options={['Yes', 'No', 'N/A']} /></td>
                   </tr>
                   
                   {/* Row 7 */}
                   <tr>
                     <td className="font-bold bg-header-peach">Preferred Location</td>
-                    <td colSpan={2}><FormInput name="basicInfo.preferredLocation" control={control} /></td>
+                    <td><FormInput name="basicInfo.preferredLocation" control={control} /></td>
                     <td className="font-bold bg-header-peach">Work from office/ Work from Home/Both</td>
-                    <td colSpan={2}><FormSelect name="basicInfo.workPreference" control={control} options={['Office', 'Home', 'Both', 'N/A']} /></td>
+                    <td colSpan={3}><FormSelect name="basicInfo.workPreference" control={control} options={['Office', 'Home', 'Both', 'N/A']} /></td>
                   </tr>
                   
                   {/* Education / Employment Header */}
