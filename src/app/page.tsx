@@ -7,7 +7,7 @@ import ResumeUploader from '@/components/resume-uploader';
 import ResumeForm from '@/components/resume-form';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import Image from 'next/image';
+import { Icons } from '@/components/icons';
 
 export default function Home() {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
@@ -101,7 +101,7 @@ export default function Home() {
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
       <div className="w-full max-w-6xl mx-auto">
         <header className="flex items-center gap-4 mb-8 no-print">
-           <Image src="https://i.imgur.com/83a2p2S.png" alt="Clyptus Logo" width={140} height={40} />
+          <Icons.logo className="h-10 w-10 text-primary" />
           <div>
             <h1 className="text-3xl font-bold font-headline text-primary">Resume Formatter</h1>
             <p className="text-muted-foreground">Upload a resume to auto-fill the form, then edit and export.</p>
