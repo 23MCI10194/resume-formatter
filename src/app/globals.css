@@ -81,7 +81,8 @@ body {
   body {
     background-color: white !important;
     color: black !important;
-    -webkit-print-color-adjust: exact;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   .no-print {
     display: none !important;
@@ -91,26 +92,87 @@ body {
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
+    background-color: white !important;
   }
   .printable-card {
     page-break-inside: avoid;
-    border: 1px solid #e0e0e0 !important;
+    border: 1px solid black !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: white !important;
   }
   input, textarea, select, .printable-input {
-    border: 1px solid #ccc !important;
-    background-color: #f9f9f9 !important;
-    -webkit-print-color-adjust: exact;
+    border: 1px solid black !important;
+    background-color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border-radius: 0 !important;
+    padding: 2px 4px !important;
+    height: auto !important;
+    font-size: 11px !important;
+  }
+  label {
+    font-size: 11px !important;
+  }
+  table, tr, td, th {
+    border-color: black !important;
+    border-style: solid !important;
+  }
+  td {
+      padding: 2px !important;
   }
   h1, h2, h3, h4, p {
     color: black !important;
   }
   .printable-section-header {
-    background-color: #f2a223 !important;
-    -webkit-print-color-adjust: exact;
+    background-color: #fde047 !important; /* Corresponds to yellow-300 */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
     color: black !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    padding: 2px !important;
+    border-bottom: 1px solid black !important;
   }
+  
+  .bg-yellow-500 {
+     background-color: #fde047 !important;
+  }
+  
+  .grid {
+    display: grid !important;
+  }
+
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  .gap-px {
+    gap: 1px !important;
+  }
+  
+  .bg-black {
+    background-color: black !important;
+  }
+  
+  .bg-white {
+    background-color: white !important;
+  }
+
+  .p-1 {
+    padding: 0.25rem !important;
+  }
+  
+  .space-y-1 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.25rem !important;
+  }
+
   @page {
     size: A4;
-    margin: 0.5cm;
+    margin: 1cm;
   }
 }
