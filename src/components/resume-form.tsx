@@ -216,12 +216,10 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         </tr>
                       ))}
                       <tr>
-                        <td className="font-bold border border-black" colSpan={3}>Communication (Poor / Average / Excellent)</td>
-                        <td colSpan={3} className="border border-black"><FormSelect name="otherInfo.communicationSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
-                      </tr>
-                      <tr>
-                        <td className="font-bold border border-black" colSpan={3}>Listening Skills (Poor / Average / Excellent)</td>
-                        <td colSpan={3} className="border border-black"><FormSelect name="otherInfo.listeningSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
+                        <td className="font-bold border border-black" colSpan={2}>Communication (Poor / Average / Excellent)</td>
+                        <td className="border border-black"><FormSelect name="otherInfo.communicationSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
+                        <td className="font-bold border border-black" colSpan={2}>Listening Skills (Poor / Average / Excellent)</td>
+                        <td className="border border-black"><FormSelect name="otherInfo.listeningSkills" control={control} options={['Poor', 'Average', 'Excellent', 'N/A']} /></td>
                       </tr>
                       
                       {/* Other Info */}
