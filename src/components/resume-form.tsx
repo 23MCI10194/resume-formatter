@@ -2,16 +2,13 @@
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
 import { Printer, RotateCcw } from 'lucide-react';
-import ColResizer from './col-resizer';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -55,9 +52,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const { control, watch } = form;
   const printRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
-  const [isResizing, setIsResizing] = useState(false);
   const [colWidths, setColWidths] = useState([20, 15, 15, 18, 16, 16]);
-
 
   useEffect(() => {
     try {
@@ -69,12 +64,6 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
       console.error('Failed to load column widths from localStorage', e);
     }
   }, []);
-
-  const handleColWidthChange = useCallback((newWidths: number[]) => {
-    setColWidths(newWidths);
-    localStorage.setItem('colWidths', JSON.stringify(newWidths));
-  }, []);
-
 
   const { fields: skillFields } = useFieldArray({ control, name: "skillsRating" });
 
@@ -103,10 +92,6 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                       <RotateCcw className="mr-2 h-4 w-4" /> Start Over
                     </Button>
                 </div>
-                 <div className="flex items-center space-x-2">
-                    <Switch id="resize-mode" checked={isResizing} onCheckedChange={setIsResizing} />
-                    <Label htmlFor="resize-mode">Resize Columns</Label>
-                </div>
             </div>
 
             <div ref={printRef} className={"printable-area printable-card bg-white p-2"}>
@@ -129,18 +114,18 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
 
                       {/* Row 1 */}
                       <tr>
-                        <td className="font-bold"><div className='relative'>Job Posting ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={0} enabled={isResizing}/></div></td>
+                        <td className="font-bold">Job Posting ID</td>
                         <td colSpan={2}><FormInput name="basicInfo.jobPostingId" control={control} /></td>
-                        <td className="font-bold"><div className='relative'>Job Seeker ID<ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={3} enabled={isResizing}/></div></td>
+                        <td className="font-bold">Job Seeker ID</td>
                         <td colSpan={2}><FormInput name="basicInfo.jobSeekerId" control={control} /></td>
                       </tr>
 
                        {/* Row 2 */}
                       <tr>
                         <td className="font-bold">Vendor Name</td>
-                        <td colSpan={2}><div className='relative'><FormInput name="basicInfo.vendorName" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={1} enabled={isResizing}/></div></td>
+                        <td colSpan={2}><FormInput name="basicInfo.vendorName" control={control} /></td>
                         <td className="font-bold">Position Applied</td>
-                        <td colSpan={2}><div className='relative'><FormInput name="basicInfo.positionApplied" control={control} /><ColResizer tableRef={tableRef} onWidthsChange={handleColWidthChange} colIndex={4} enabled={isResizing}/></div></td>
+                        <td colSpan={2}><FormInput name="basicInfo.positionApplied" control={control} /></td>
                       </tr>
 
                       {/* Row 3 */}
