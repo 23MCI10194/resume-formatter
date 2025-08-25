@@ -83,7 +83,9 @@ const ParseResumeDataOutputSchema = z.object({
 
     professionalExperience: z.object({
       professionalSummary: z.string().describe("A detailed professional summary from the resume. Capture all bullet points as a single string with newlines."),
-      keySkills: z.string().describe("A list of key skills from the resume. Capture all skills as a single string with newlines.")
+      keySkills: z.string().describe("A list of key skills from the resume. Capture all skills as a single string with newlines."),
+      developmentTools: z.string().describe("A list of development tools from the resume. Capture all tools as a single string with newlines."),
+      projects: z.string().describe("A list of projects from the resume. Capture all projects as a single string with newlines."),
     }).describe("Professional Experience section"),
 });
 
@@ -144,6 +146,8 @@ const resumeParserPrompt = ai.definePrompt({
 - **Professional Experience**:
   - Professional Summary: Extract the full professional summary. Preserve formatting and bullet points as newlines.
   - Key Skills: Extract the list of key skills. Preserve formatting and bullet points as newlines.
+  - Development Tools: Extract the list of development tools. Preserve formatting and bullet points as newlines.
+  - Projects: Extract the list of all projects mentioned in the resume. Preserve formatting and bullet points as newlines.
 
 Resume: {{media url=resumeDataUri}}`,
 });

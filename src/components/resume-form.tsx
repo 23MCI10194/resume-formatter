@@ -359,6 +359,22 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                             <FormTextarea name="professionalExperience.keySkills" control={control} rows={5} />
                         </td>
                       </tr>
+                       <tr>
+                        <td colSpan={6} className="printable-section-header">Development Tools</td>
+                      </tr>
+                      <tr>
+                        <td colSpan={6} className="border border-black p-2">
+                            <FormTextarea name="professionalExperience.developmentTools" control={control} rows={5} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={6} className="printable-section-header">Projects</td>
+                      </tr>
+                      <tr>
+                        <td colSpan={6} className="border border-black p-2">
+                            <FormTextarea name="professionalExperience.projects" control={control} rows={8} />
+                        </td>
+                      </tr>
 
                     </tbody>
                 </table>

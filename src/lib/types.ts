@@ -87,6 +87,8 @@ export const ResumeDataSchema = z.object({
   professionalExperience: z.object({
     professionalSummary: z.string().default("").describe("Professional Summary"),
     keySkills: z.string().default("").describe("Key Skills"),
+    developmentTools: z.string().default("").describe("Development Tools"),
+    projects: z.string().default("").describe("Projects"),
   }).default({}).describe('Professional Experience'),
 });
 
