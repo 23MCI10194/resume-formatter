@@ -89,7 +89,7 @@ body {
 
 @media print {
   @page {
-    size: A4;
+    size: legal;
     margin: 0;
   }
 
