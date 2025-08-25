@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useForm, useFieldArray, Controller, useController } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
@@ -364,5 +364,3 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     </Form>
   );
 }
-
-    
