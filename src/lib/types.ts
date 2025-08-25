@@ -2,6 +2,14 @@ import { z } from "zod";
 
 const YesNoSchema = z.enum(['Yes', 'No', 'N/A']).default('N/A');
 
+export const ProjectSchema = z.object({
+  projectName: z.string().default("").describe("Project Name/Title"),
+  client: z.string().default("").describe("Client Name"),
+  duration: z.string().default("").describe("Project Duration (e.g., Oct 2019 - Present)"),
+  rolesAndResponsibilities: z.string().default("").describe("Roles and Responsibilities in the project."),
+  details: z.string().default("").describe("Any other details or bullet points from the project description."),
+});
+
 export const ResumeDataSchema = z.object({
   basicInfo: z.object({
     jobPostingId: z.string().default("").describe("Job Posting ID"),
@@ -88,7 +96,7 @@ export const ResumeDataSchema = z.object({
     professionalSummary: z.string().default("").describe("Professional Summary"),
     keySkills: z.string().default("").describe("Key Skills"),
     developmentTools: z.string().default("").describe("Development Tools"),
-    projects: z.string().default("").describe("Projects"),
+    projects: z.array(ProjectSchema).default([]).describe("Projects"),
   }).default({}).describe('Professional Experience'),
 });
 

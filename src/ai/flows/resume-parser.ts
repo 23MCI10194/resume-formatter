@@ -21,6 +21,15 @@ export type ParseResumeDataInput = z.infer<typeof ParseResumeDataInputSchema>;
 
 const YesNoSchema = z.enum(['Yes', 'No', 'N/A']).describe("Yes, No, or Not Applicable");
 
+const ProjectSchema = z.object({
+  projectName: z.string().describe("The name or title of the project."),
+  client: z.string().describe("The client for whom the project was done."),
+  duration: z.string().describe("The duration of the project (e.g., 'Oct 2019 – Present')."),
+  rolesAndResponsibilities: z.string().describe("The candidate's roles and responsibilities in the project."),
+  details: z.string().describe("All other bullet points and details for the project, combined into a single string with newlines."),
+});
+
+
 const ParseResumeDataOutputSchema = z.object({
     basicInfo: z.object({
         positionApplied: z.string().describe("The position the candidate is applying for."),
@@ -85,7 +94,7 @@ const ParseResumeDataOutputSchema = z.object({
       professionalSummary: z.string().describe("A detailed professional summary from the resume. Capture all bullet points as a single string with newlines."),
       keySkills: z.string().describe("A list of key skills from the resume. Capture all skills as a single string with newlines."),
       developmentTools: z.string().describe("A list of development tools from the resume. Capture all tools as a single string with newlines."),
-      projects: z.string().describe("A list of projects from the resume. Capture all projects as a single string with newlines."),
+      projects: z.array(ProjectSchema).describe("A list of projects from the resume. Each project should be a separate object."),
     }).describe("Professional Experience section"),
 });
 
@@ -147,7 +156,12 @@ const resumeParserPrompt = ai.definePrompt({
   - Professional Summary: Extract the full professional summary. Preserve formatting and bullet points as newlines.
   - Key Skills: Extract the list of key skills. Preserve formatting and bullet points as newlines.
   - Development Tools: Extract the list of development tools. Preserve formatting and bullet points as newlines.
-  - Projects: Extract the list of all projects mentioned in the resume. Preserve formatting and bullet points as newlines.
+  - Projects: Extract each project into a separate object in the array. For each project, extract the following:
+    - projectName: The name or title of the project.
+    - client: The client of the project.
+    - duration: The time period of the project.
+    - rolesAndResponsibilities: A summary of the candidate's role and main duties.
+    - details: Collate all the remaining bullet points and descriptions for the project into a single string, preserving newlines. If any of the main fields (projectName, client, duration, roles) are not explicitly mentioned, leave them as empty strings.
 
 Resume: {{media url=resumeDataUri}}`,
 });

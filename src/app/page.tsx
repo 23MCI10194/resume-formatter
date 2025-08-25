@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { parseResumeData, type ParseResumeDataOutput } from '@/ai/flows/resume-parser';
-import { ResumeDataSchema, type ResumeData } from '@/lib/types';
+import { ResumeDataSchema, type ResumeData, ProjectSchema } from '@/lib/types';
 import ResumeUploader from '@/components/resume-uploader';
 import ResumeForm from '@/components/resume-form';
 import { Loader2 } from 'lucide-react';
@@ -56,7 +56,13 @@ export default function Home() {
               }))
             : defaultData.skillsRating,
           otherInfo: { ...defaultData.otherInfo, ...result.otherInfo },
-          professionalExperience: { ...defaultData.professionalExperience, ...result.professionalExperience },
+          professionalExperience: { 
+            ...defaultData.professionalExperience, 
+            ...result.professionalExperience,
+            projects: result.professionalExperience.projects.length > 0
+              ? result.professionalExperience.projects.map(p => ProjectSchema.parse(p))
+              : defaultData.professionalExperience.projects,
+          },
           recruiterDetails: { 
             ...defaultData.recruiterDetails,
             deloitteRecruiter: "HR Name" // Placeholder

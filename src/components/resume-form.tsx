@@ -11,6 +11,7 @@ import { Form } from '@/components/ui/form';
 import { Printer, RotateCcw } from 'lucide-react';
 import ImageUploader from './image-uploader';
 import { Textarea } from './ui/textarea';
+import { Separator } from './ui/separator';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -87,6 +88,34 @@ const FormImageUploader = ({ name, control }: { name: any, control: any }) => (
   />
 );
 
+const FormProject = ({ control, index }: { control: any, index: number }) => {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center">
+        <span className="font-bold p-2 w-48">Project Name:</span>
+        <FormInput name={`professionalExperience.projects.${index}.projectName`} control={control} />
+      </div>
+      <div className="flex items-center">
+        <span className="font-bold p-2 w-48">Client:</span>
+        <FormInput name={`professionalExperience.projects.${index}.client`} control={control} />
+      </div>
+      <div className="flex items-center">
+        <span className="font-bold p-2 w-48">Duration:</span>
+        <FormInput name={`professionalExperience.projects.${index}.duration`} control={control} />
+      </div>
+      <div className="flex items-start">
+        <span className="font-bold p-2 w-48 mt-2">Roles & Responsibilities:</span>
+        <FormTextarea name={`professionalExperience.projects.${index}.rolesAndResponsibilities`} control={control} rows={2} />
+      </div>
+      <div className="flex items-start">
+         <span className="font-bold p-2 w-48 mt-2">Details:</span>
+        <FormTextarea name={`professionalExperience.projects.${index}.details`} control={control} rows={4} />
+      </div>
+    </div>
+  );
+};
+
+
 export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const form = useForm<ResumeData>({
     resolver: zodResolver(ResumeDataSchema),
@@ -97,6 +126,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const printRef = useRef<HTMLDivElement>(null);
 
   const { fields: skillFields } = useFieldArray({ control, name: "skillsRating" });
+  const { fields: projectFields } = useFieldArray({ control, name: "professionalExperience.projects" });
 
   useEffect(() => {
     form.reset(initialData);
@@ -371,8 +401,15 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={6} className="printable-section-header">Projects</td>
                       </tr>
                       <tr>
-                        <td colSpan={6} className="border border-black p-2">
-                            <FormTextarea name="professionalExperience.projects" control={control} rows={8} />
+                        <td colSpan={6} className="border-t border-b border-black p-2">
+                          <div className="space-y-2">
+                            {projectFields.map((field, index) => (
+                              <div key={field.id}>
+                                <FormProject control={control} index={index} />
+                                {index < projectFields.length - 1 && <Separator className="my-2 bg-black" />}
+                              </div>
+                            ))}
+                          </div>
                         </td>
                       </tr>
 
