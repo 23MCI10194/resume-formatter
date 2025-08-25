@@ -161,6 +161,17 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     className="w-full border-collapse border-2 border-black printable-table"
                 >
                     <tbody>
+                      {/* Photo Upload */}
+                      <tr>
+                        <td colSpan={4} className="border border-black p-2 font-bold">Passport Size Photo</td>
+                        <td colSpan={2} rowSpan={2} className="border border-black align-top p-1">
+                           <FormImageUploader name="basicInfo.passportPhotoDataUri" control={control} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={4} className='border-r border-black'></td>
+                      </tr>
+
                       {/* Basic Information Header */}
                       <tr>
                         <td colSpan={6} className="printable-section-header">Basic Information</td>

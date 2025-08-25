@@ -26,6 +26,7 @@ export const ResumeDataSchema = z.object({
     relocation: YesNoSchema.describe("Relocation preference"),
     preferredLocation: z.string().default("").describe("Preferred Location"),
     workPreference: z.enum(['Office', 'Home', 'Both', 'N/A']).default('N/A').describe("Work from office/home preference"),
+    passportPhotoDataUri: z.string().default("").describe("Passport Photo Image Data URI"),
   }).default({}).describe('Basic Information'),
   
   educationDetails: z.object({
