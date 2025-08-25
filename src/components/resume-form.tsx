@@ -2,18 +2,19 @@
 
 import { useForm, useFieldArray, Controller, useController } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ResumeDataSchema, type ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
-import { Printer, RotateCcw, FileText } from 'lucide-react';
+import { Printer, RotateCcw, FileText, Loader2 } from 'lucide-react';
 import ImageUploader from './image-uploader';
 import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
-import htmlToDocx from 'html-to-docx';
 import { saveAs } from 'file-saver';
+import { generateWordDocument } from '@/app/actions/download-word';
+import { useToast } from '@/hooks/use-toast';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -119,6 +120,8 @@ const FormProject = ({ control, index }: { control: any, index: number }) => {
 
 
 export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { toast } = useToast();
   const form = useForm<ResumeData>({
     resolver: zodResolver(ResumeDataSchema),
     defaultValues: initialData,
@@ -145,37 +148,58 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   
   const handleWordDownload = async () => {
     if (!printRef.current) return;
+    setIsDownloading(true);
 
-    // Clone the printable element to modify it without affecting the displayed form
-    const printableElement = printRef.current.cloneNode(true) as HTMLDivElement;
+    try {
+      // Clone the printable element to modify it without affecting the displayed form
+      const printableElement = printRef.current.cloneNode(true) as HTMLDivElement;
 
-    // Replace input fields with their values
-    printableElement.querySelectorAll('input, textarea').forEach(el => {
-        const input = el as HTMLInputElement | HTMLTextAreaElement;
-        const value = input.value || ' ';
-        const span = document.createElement('span');
-        span.textContent = value;
-        span.className = input.className;
-        input.parentNode?.replaceChild(span, input);
-    });
-    
-    // Replace select fields with their values
-    printableElement.querySelectorAll('[role="combobox"]').forEach(el => {
-        const trigger = el as HTMLElement;
-        const value = trigger.querySelector('span')?.textContent || ' ';
-        const span = document.createElement('span');
-        span.textContent = value;
-        span.className = trigger.className;
-        trigger.parentNode?.replaceChild(span, trigger);
-    });
+      // Replace input fields with their values for DOCX export
+      printableElement.querySelectorAll('input, textarea').forEach(el => {
+          const input = el as HTMLInputElement | HTMLTextAreaElement;
+          const value = input.value || ' ';
+          const span = document.createElement('span');
+          span.textContent = value;
+          span.className = input.className;
+          input.parentNode?.replaceChild(span, input);
+      });
+      
+      // Replace select fields with their values for DOCX export
+      printableElement.querySelectorAll('[role="combobox"]').forEach(el => {
+          const trigger = el as HTMLElement;
+          const value = trigger.querySelector('span')?.textContent || ' ';
+          const span = document.createElement('span');
+          span.textContent = value;
+          span.className = trigger.className;
+          trigger.parentNode?.replaceChild(span, trigger);
+      });
 
-    const fileBuffer = await htmlToDocx(printableElement.outerHTML, undefined, {
-      table: { row: { cantSplit: true } },
-      footer: false,
-      header: false,
-    });
+      // Remove the non-printable image upload areas
+      printableElement.querySelectorAll('.no-export').forEach(el => el.remove());
 
-    saveAs(fileBuffer, `${initialData.basicInfo.candidateName || 'resume'}-details.docx`);
+      const base64 = await generateWordDocument(printableElement.outerHTML);
+      const byteCharacters = atob(base64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      });
+      
+      saveAs(blob, `${initialData.basicInfo.candidateName || 'resume'}-details.docx`);
+      
+    } catch(error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Download Failed",
+        description: "There was a problem generating the Word document. Please try again.",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -186,8 +210,13 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     <Button type="button" onClick={handlePrint}>
                       <Printer className="mr-2 h-4 w-4" /> Print / Download PDF
                     </Button>
-                    <Button type="button" onClick={handleWordDownload}>
-                      <FileText className="mr-2 h-4 w-4" /> Download as Word
+                    <Button type="button" onClick={handleWordDownload} disabled={isDownloading}>
+                      {isDownloading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <FileText className="mr-2 h-4 w-4" />
+                      )}
+                      Download as Word
                     </Button>
                     <Button type="button" variant="outline" onClick={onReset}>
                       <RotateCcw className="mr-2 h-4 w-4" /> Start Over
@@ -204,7 +233,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                       {/* Basic Information Header */}
                       <tr>
                         <td colSpan={5} className="printable-section-header">Basic Information</td>
-                        <td className="border border-black align-top p-1 bg-[#F5BCA9]">
+                        <td className="border border-black align-top p-1 bg-[#F5BCA9] no-export">
                            <FormImageUploader name="basicInfo.passportPhotoDataUri" control={control} />
                         </td>
                       </tr>
@@ -404,7 +433,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={6} className="printable-section-header">Verification Details</td>
                       </tr>
                       <tr>
-                        <td colSpan={6} className="border border-black p-2">
+                        <td colSpan={6} className="border border-black p-2 no-export">
                           <FormImageUploader name="verificationDetails.panCardDataUri" control={control} />
                         </td>
                       </tr>
