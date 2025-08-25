@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
-import { Printer, RotateCcw } from 'lucide-react';
+import { Printer, RotateCcw, FileText } from 'lucide-react';
 import ImageUploader from './image-uploader';
 import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
+import htmlToDocx from 'html-to-docx';
+import { saveAs } from 'file-saver';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -140,6 +142,41 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const handlePrint = () => {
     window.print();
   }
+  
+  const handleWordDownload = async () => {
+    if (!printRef.current) return;
+
+    // Clone the printable element to modify it without affecting the displayed form
+    const printableElement = printRef.current.cloneNode(true) as HTMLDivElement;
+
+    // Replace input fields with their values
+    printableElement.querySelectorAll('input, textarea').forEach(el => {
+        const input = el as HTMLInputElement | HTMLTextAreaElement;
+        const value = input.value || ' ';
+        const span = document.createElement('span');
+        span.textContent = value;
+        span.className = input.className;
+        input.parentNode?.replaceChild(span, input);
+    });
+    
+    // Replace select fields with their values
+    printableElement.querySelectorAll('[role="combobox"]').forEach(el => {
+        const trigger = el as HTMLElement;
+        const value = trigger.querySelector('span')?.textContent || ' ';
+        const span = document.createElement('span');
+        span.textContent = value;
+        span.className = trigger.className;
+        trigger.parentNode?.replaceChild(span, trigger);
+    });
+
+    const fileBuffer = await htmlToDocx(printableElement.outerHTML, undefined, {
+      table: { row: { cantSplit: true } },
+      footer: false,
+      header: false,
+    });
+
+    saveAs(fileBuffer, `${initialData.basicInfo.candidateName || 'resume'}-details.docx`);
+  };
 
   return (
     <Form {...form}>
@@ -147,7 +184,10 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
             <div className="flex flex-col sm:flex-row justify-between items-center gap-2 no-print">
                 <div className="flex gap-2">
                     <Button type="button" onClick={handlePrint}>
-                      <Printer className="mr-2 h-4 w-4" /> Print / Download
+                      <Printer className="mr-2 h-4 w-4" /> Print / Download PDF
+                    </Button>
+                    <Button type="button" onClick={handleWordDownload}>
+                      <FileText className="mr-2 h-4 w-4" /> Download as Word
                     </Button>
                     <Button type="button" variant="outline" onClick={onReset}>
                       <RotateCcw className="mr-2 h-4 w-4" /> Start Over
@@ -163,8 +203,8 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                     <tbody>
                       {/* Basic Information Header */}
                       <tr>
-                        <td colSpan={4} className="printable-section-header">Basic Information</td>
-                        <td colSpan={2} className="border border-black align-top p-1 bg-[#F5BCA9]">
+                        <td colSpan={5} className="printable-section-header">Basic Information</td>
+                        <td className="border border-black align-top p-1 bg-[#F5BCA9]">
                            <FormImageUploader name="basicInfo.passportPhotoDataUri" control={control} />
                         </td>
                       </tr>
