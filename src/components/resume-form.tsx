@@ -319,6 +319,11 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         </td>
                       </tr>
                       
+                      {/* Spacer Row */}
+                      <tr>
+                        <td colSpan={6} className="p-2"></td>
+                      </tr>
+
                       {/* Professional Experience */}
                       <tr>
                         <td colSpan={6} className="printable-section-header">Professional Summary</td>
