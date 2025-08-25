@@ -102,8 +102,12 @@ body {
     line-height: 1.1;
   }
 
-  .no-print {
+  .no-print, .print-hide {
     display: none !important;
+  }
+  
+  .print-show {
+    display: block !important;
   }
 
   main, .printable-area, .printable-card {

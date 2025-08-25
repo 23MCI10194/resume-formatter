@@ -39,22 +39,26 @@ const FormTextarea = ({ name, control, rows = 3 }: { name: any, control: any, ro
   }, [field.value]);
 
   return (
-    <Textarea
-      {...field}
-      ref={textareaRef}
-      value={field.value || ''}
-      className="w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input resize-none overflow-hidden"
-      rows={rows}
-      onChange={(e) => {
-        field.onChange(e);
-        if (textareaRef.current) {
-          textareaRef.current.style.height = 'auto';
-          textareaRef.current.style.height = `${e.target.scrollHeight}px`;
-        }
-      }}
-    />
+    <>
+      <Textarea
+        {...field}
+        ref={textareaRef}
+        value={field.value || ''}
+        className="w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input resize-none overflow-hidden print-hide"
+        rows={rows}
+        onChange={(e) => {
+          field.onChange(e);
+          if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${e.target.scrollHeight}px`;
+          }
+        }}
+      />
+      <div className="hidden print-show whitespace-pre-wrap text-sm printable-input">{field.value}</div>
+    </>
   );
 };
+
 
 const FormSelect = ({ name, control, options }: { name: any, control: any, options: string[] }) => (
     <Controller
