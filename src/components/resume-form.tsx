@@ -361,8 +361,7 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td colSpan={6} className="printable-section-header">Verification Details</td>
                       </tr>
                       <tr>
-                        <td className="font-bold border border-black p-2" colSpan={2}>PAN Card</td>
-                        <td colSpan={4} className="border border-black p-2">
+                        <td colSpan={6} className="border border-black p-2">
                           <FormImageUploader name="verificationDetails.panCardDataUri" control={control} />
                         </td>
                       </tr>
