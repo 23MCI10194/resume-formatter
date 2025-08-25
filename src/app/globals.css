@@ -87,6 +87,10 @@ body {
     print-color-adjust: exact !important;
 }
 
+.printable-table td {
+    word-break: break-word;
+}
+
 @media print {
   @page {
     size: legal;
