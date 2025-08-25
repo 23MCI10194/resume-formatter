@@ -80,6 +80,11 @@ const ParseResumeDataOutputSchema = z.object({
         longLeavePlan: YesNoSchema,
         otherInput: z.string().describe("Any other Input / Comments / Concerns"),
     }).describe('Other Information section'),
+
+    professionalExperience: z.object({
+      professionalSummary: z.string().describe("A detailed professional summary from the resume. Capture all bullet points as a single string with newlines."),
+      keySkills: z.string().describe("A list of key skills from the resume. Capture all skills as a single string with newlines.")
+    }).describe("Professional Experience section"),
 });
 
 export type ParseResumeDataOutput = z.infer<typeof ParseResumeDataOutputSchema>;
@@ -135,6 +140,10 @@ const resumeParserPrompt = ai.definePrompt({
   - If Yes, Reason to Leave Deloitte:
   - Any plan for a long leave for next 6 months: (Yes/No/N/A).
   - Any other Input / Comments / Concerns:
+
+- **Professional Experience**:
+  - Professional Summary: Extract the full professional summary. Preserve formatting and bullet points as newlines.
+  - Key Skills: Extract the list of key skills. Preserve formatting and bullet points as newlines.
 
 Resume: {{media url=resumeDataUri}}`,
 });

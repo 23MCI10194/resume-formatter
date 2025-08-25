@@ -56,6 +56,7 @@ export default function Home() {
               }))
             : defaultData.skillsRating,
           otherInfo: { ...defaultData.otherInfo, ...result.otherInfo },
+          professionalExperience: { ...defaultData.professionalExperience, ...result.professionalExperience },
           recruiterDetails: { 
             ...defaultData.recruiterDetails,
             deloitteRecruiter: "HR Name" // Placeholder

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form } from '@/components/ui/form';
 import { Printer, RotateCcw } from 'lucide-react';
 import ImageUploader from './image-uploader';
+import { Textarea } from './ui/textarea';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -24,6 +25,21 @@ const FormInput = ({ name, control }: { name: any, control: any }) => (
             <Input {...field} value={field.value || ''} className="h-full w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input" />
         )}
     />
+);
+
+const FormTextarea = ({ name, control, rows = 3 }: { name: any, control: any, rows?: number }) => (
+  <Controller
+    control={control}
+    name={name}
+    render={({ field }) => (
+      <Textarea
+        {...field}
+        value={field.value || ''}
+        className="w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input"
+        rows={rows}
+      />
+    )}
+  />
 );
 
 const FormSelect = ({ name, control, options }: { name: any, control: any, options: string[] }) => (
@@ -302,6 +318,25 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                           <FormImageUploader name="verificationDetails.panCardDataUri" control={control} />
                         </td>
                       </tr>
+                      
+                      {/* Professional Experience */}
+                      <tr>
+                        <td colSpan={6} className="printable-section-header">Professional Summary</td>
+                      </tr>
+                      <tr>
+                        <td colSpan={6} className="border border-black p-2">
+                           <FormTextarea name="professionalExperience.professionalSummary" control={control} rows={8} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={6} className="printable-section-header">Key Skills</td>
+                      </tr>
+                      <tr>
+                        <td colSpan={6} className="border border-black p-2">
+                            <FormTextarea name="professionalExperience.keySkills" control={control} rows={5} />
+                        </td>
+                      </tr>
+
                     </tbody>
                 </table>
               </div>

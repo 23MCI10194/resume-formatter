@@ -83,6 +83,11 @@ export const ResumeDataSchema = z.object({
   verificationDetails: z.object({
     panCardDataUri: z.string().default("").describe("PAN Card Image Data URI"),
   }).default({}).describe('Verification Details'),
+
+  professionalExperience: z.object({
+    professionalSummary: z.string().default("").describe("Professional Summary"),
+    keySkills: z.string().default("").describe("Key Skills"),
+  }).default({}).describe('Professional Experience'),
 });
 
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
