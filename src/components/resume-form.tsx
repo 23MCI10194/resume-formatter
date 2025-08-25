@@ -27,20 +27,34 @@ const FormInput = ({ name, control }: { name: any, control: any }) => (
     />
 );
 
-const FormTextarea = ({ name, control, rows = 3 }: { name: any, control: any, rows?: number }) => (
-  <Controller
-    control={control}
-    name={name}
-    render={({ field }) => (
-      <Textarea
-        {...field}
-        value={field.value || ''}
-        className="w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input"
-        rows={rows}
-      />
-    )}
-  />
-);
+const FormTextarea = ({ name, control, rows = 3 }: { name: any, control: any, rows?: number }) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { field } = useController({ name, control });
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [field.value]);
+
+  return (
+    <Textarea
+      {...field}
+      ref={textareaRef}
+      value={field.value || ''}
+      className="w-full bg-transparent border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm printable-input resize-none overflow-hidden"
+      rows={rows}
+      onChange={(e) => {
+        field.onChange(e);
+        if (textareaRef.current) {
+          textareaRef.current.style.height = 'auto';
+          textareaRef.current.style.height = `${e.target.scrollHeight}px`;
+        }
+      }}
+    />
+  );
+};
 
 const FormSelect = ({ name, control, options }: { name: any, control: any, options: string[] }) => (
     <Controller
@@ -350,3 +364,5 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
     </Form>
   );
 }
+
+    
