@@ -60,6 +60,9 @@ export default function Home() {
             ...defaultData.recruiterDetails,
             deloitteRecruiter: "HR Name" // Placeholder
           },
+          verificationDetails: {
+            ...defaultData.verificationDetails,
+          }
         };
 
         const validatedData = ResumeDataSchema.parse(fullData);
@@ -93,10 +96,16 @@ export default function Home() {
   };
 
   const handleReset = useCallback(() => {
+    const defaultData = ResumeDataSchema.parse({});
+    setResumeData(defaultData);
+    localStorage.setItem('resumeFormData', JSON.stringify(defaultData));
+  }, []);
+  
+  const handleNewUpload = useCallback(() => {
     setResumeData(null);
     localStorage.removeItem('resumeFormData');
   }, []);
-  
+
   return (
     <main className="min-h-screen bg-background flex flex-col items-center p-4 sm:p-8">
       <div className="w-full max-w-6xl mx-auto">
@@ -115,7 +124,7 @@ export default function Home() {
               <p className="mt-4 text-muted-foreground">Checking for saved session...</p>
             </div>
           ) : resumeData ? (
-            <ResumeForm initialData={resumeData} onReset={handleReset} />
+            <ResumeForm initialData={resumeData} onReset={handleNewUpload} />
           ) : (
             <ResumeUploader onUpload={handleResumeParse} isLoading={isParsing} />
           )}

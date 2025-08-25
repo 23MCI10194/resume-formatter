@@ -79,6 +79,10 @@ export const ResumeDataSchema = z.object({
     vendorCoordinator: z.string().default(""),
     recruiterRating: z.string().default("").describe("Recruiter's rating of the candidate"),
   }).default({}).describe('Recruiter Details'),
+
+  verificationDetails: z.object({
+    panCardDataUri: z.string().default("").describe("PAN Card Image Data URI"),
+  }).default({}).describe('Verification Details'),
 });
 
 export type ResumeData = z.infer<typeof ResumeDataSchema>;

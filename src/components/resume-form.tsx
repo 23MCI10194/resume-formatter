@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form } from '@/components/ui/form';
 import { Printer, RotateCcw } from 'lucide-react';
+import ImageUploader from './image-uploader';
 
 interface ResumeFormProps {
   initialData: ResumeData;
@@ -42,6 +43,15 @@ const FormSelect = ({ name, control, options }: { name: any, control: any, optio
     />
 );
 
+const FormImageUploader = ({ name, control }: { name: any, control: any }) => (
+  <Controller
+    control={control}
+    name={name}
+    render={({ field: { onChange, value } }) => (
+      <ImageUploader value={value} onChange={onChange} />
+    )}
+  />
+);
 
 export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
   const form = useForm<ResumeData>({
@@ -280,6 +290,17 @@ export default function ResumeForm({ initialData, onReset }: ResumeFormProps) {
                         <td className="border border-black"><FormInput name="recruiterDetails.deloitteCrm" control={control}/></td>
                         <td className="font-bold border border-black p-2" colSpan={2}>Vendor Coordinator</td>
                         <td className="border border-black"><FormInput name="recruiterDetails.vendorCoordinator" control={control}/></td>
+                      </tr>
+
+                      {/* Verification Details */}
+                      <tr>
+                        <td colSpan={6} className="printable-section-header">Verification Details</td>
+                      </tr>
+                      <tr>
+                        <td className="font-bold border border-black p-2" colSpan={2}>PAN Card</td>
+                        <td colSpan={4} className="border border-black p-2">
+                          <FormImageUploader name="verificationDetails.panCardDataUri" control={control} />
+                        </td>
                       </tr>
                     </tbody>
                 </table>
