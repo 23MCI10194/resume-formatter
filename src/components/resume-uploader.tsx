@@ -19,7 +19,7 @@ export default function ResumeUploader({ onUpload, isLoading }: ResumeUploaderPr
       toast({
         variant: 'destructive',
         title: 'Invalid File Type',
-        description: 'Please upload a .pdf or .docx file.',
+        description: 'Please upload a .pdf file.',
       });
       return;
     }
@@ -31,7 +31,6 @@ export default function ResumeUploader({ onUpload, isLoading }: ResumeUploaderPr
     onDrop,
     accept: {
       'application/pdf': ['.pdf'],
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
     },
     maxFiles: 1,
     multiple: false,
@@ -59,7 +58,7 @@ export default function ResumeUploader({ onUpload, isLoading }: ResumeUploaderPr
             {isDragActive ? 'Drop the resume here!' : 'Drag & drop a resume here, or click to select'}
           </p>
           <p className="text-sm text-muted-foreground mt-1">
-            Supports .pdf and .docx formats
+            Supports .pdf format
           </p>
         </div>
       )}
